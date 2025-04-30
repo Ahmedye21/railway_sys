@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2025 at 11:18 PM
+-- Generation Time: Apr 30, 2025 at 05:09 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,6 +32,23 @@ CREATE TABLE `city` (
   `Name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `city`
+--
+
+INSERT INTO `city` (`ID`, `Name`) VALUES
+(8, 'Ain Sokhna'),
+(6, 'Alexandria'),
+(10, 'Aswan'),
+(5, 'El-Alamein'),
+(2, 'Gargoub'),
+(11, 'Hurghada'),
+(9, 'Luxor'),
+(4, 'Matruh'),
+(7, 'October'),
+(3, 'Sallum'),
+(1, 'Siwa Oasis');
+
 -- --------------------------------------------------------
 
 --
@@ -40,8 +57,20 @@ CREATE TABLE `city` (
 
 CREATE TABLE `province` (
   `ID` int(11) NOT NULL,
-  `Name` int(11) NOT NULL
+  `Name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `province`
+--
+
+INSERT INTO `province` (`ID`, `Name`) VALUES
+(2, 'Alexandria'),
+(6, 'Aswan'),
+(3, 'Cairo'),
+(5, 'Luxor'),
+(1, 'Marsa Matruh'),
+(4, 'Suez');
 
 -- --------------------------------------------------------
 
@@ -64,8 +93,8 @@ CREATE TABLE `route_station` (
   `ID` int(11) NOT NULL,
   `Route_ID` int(11) NOT NULL,
   `Station_ID` int(11) NOT NULL,
-  `Arrival_Time` time DEFAULT NULL,
-  `Departure_Time` time DEFAULT NULL,
+  `Arrival_Time` datetime DEFAULT NULL,
+  `Departure_Time` datetime DEFAULT NULL,
   `Order` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -83,6 +112,23 @@ CREATE TABLE `station` (
   `Latitude` float DEFAULT NULL,
   `Longitude` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `station`
+--
+
+INSERT INTO `station` (`ID`, `Name`, `City_ID`, `Province_ID`, `Latitude`, `Longitude`) VALUES
+(1, 'Sallum', 3, 1, NULL, NULL),
+(2, 'Gargoub', 2, 1, NULL, NULL),
+(3, 'Siwa Oasis', 1, 1, NULL, NULL),
+(4, 'Matruh', 4, 1, NULL, NULL),
+(5, 'El-Alamein', 5, 2, NULL, NULL),
+(6, 'Alexandria', 6, 2, NULL, NULL),
+(7, 'October', 7, 3, NULL, NULL),
+(8, 'Ain Sokhna', 8, 2, NULL, NULL),
+(9, 'Luxor', 9, 5, NULL, NULL),
+(10, 'Aswan', 10, 6, NULL, NULL),
+(11, 'Hurghada', 11, 4, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -133,13 +179,12 @@ CREATE TABLE `trainlocation` (
 
 -- --------------------------------------------------------
 
-
 --
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
-  `ID` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -226,15 +271,8 @@ ALTER TABLE `trainlocation`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `Email` (`Email`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `Email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -244,19 +282,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `province`
 --
 ALTER TABLE `province`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `route`
 --
 ALTER TABLE `route`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `route_station`
@@ -268,7 +306,7 @@ ALTER TABLE `route_station`
 -- AUTO_INCREMENT for table `station`
 --
 ALTER TABLE `station`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `ticket`
@@ -316,7 +354,7 @@ ALTER TABLE `station`
 -- Constraints for table `ticket`
 --
 ALTER TABLE `ticket`
-  ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`User_ID`) REFERENCES `users` (`ID`),
+  ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`User_ID`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`From_Station_ID`) REFERENCES `station` (`ID`),
   ADD CONSTRAINT `ticket_ibfk_3` FOREIGN KEY (`To_Station_ID`) REFERENCES `station` (`ID`),
   ADD CONSTRAINT `ticket_ibfk_4` FOREIGN KEY (`Train_ID`) REFERENCES `train` (`ID`);
