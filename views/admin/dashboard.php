@@ -8,8 +8,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if user is admin
-if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: user_dashboard.php');
+if (!isset($_SESSION['role'])) {
+    header('Location: index.php?action=login');
+    exit;
+}
+
+if ($_SESSION['role'] !== 'admin') {
+    header('Location: index.php');
     exit;
 }
 ?>

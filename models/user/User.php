@@ -1,5 +1,7 @@
 <?php
-include_once "config.php";
+// models/User.php
+
+require_once '../core/config.php';
 
 class User {
     private $conn;
@@ -16,10 +18,8 @@ class User {
         $this->conn = DatabaseConfig::getConnection();
     }
     
+
     public function signup() {
-        $this->name = $this->name;
-        $this->email = $this->email;
-        $this->password = $this->password;
         $this->balance = 0.00;
         
         if($this->emailExists()) {
@@ -28,13 +28,12 @@ class User {
         
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         
-
         $query = "INSERT INTO users SET 
-                name = :name, 
-                email = :email, 
-                password = :password, 
-                user_type = :user_type,
-                balance = :balance";
+                name        = :name, 
+                email       = :email, 
+                password    = :password, 
+                user_type   = :user_type,
+                balance     = :balance";
 
         $stmt = $this->conn->prepare($query);
         
@@ -45,38 +44,38 @@ class User {
         $stmt->bindParam(":balance", $this->balance);
         
         if($stmt->execute()) {
+            $this->id = $this->getNextId();
             return true;
         }
         
         return false;
     }
+
+    private function getNextId() {
+        $query = "SELECT MAX(id) + 1 AS next_id FROM users";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['next_id'] ?: 1;
+    }
     
-    public function login() {
-        $this->email = $this->email;
-        $this->password = $this->password;
-        
+    public function authenticate() {
         $query = "SELECT id, name, email, password, user_type, balance FROM users 
                 WHERE email = ? 
                 LIMIT 0,1";
         
         $stmt = $this->conn->prepare($query);
-        
         $stmt->bindParam(1, $this->email);
-        
         $stmt->execute();
         
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if($row) {
-            $this->id = $row['id'];
-            $this->name = $row['name'];
-            $this->user_type = $row['user_type'];
-            $this->balance = $row['balance'];
-            
-            // Verify password
-            if(password_verify($this->password, $row['password'])) {
-                return true;
-            }
+        if($row && password_verify($this->password, $row['password'])) {
+            $this->id           = $row['id'];
+            $this->name         = $row['name'];
+            $this->user_type    = $row['user_type'];
+            $this->balance      = $row['balance'];
+            return true;
         }
         
         return false;
@@ -84,18 +83,10 @@ class User {
     
     private function emailExists() {
         $query = "SELECT id FROM users WHERE email = ? LIMIT 0,1";
-        
         $stmt = $this->conn->prepare($query);
-
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
-
-        $num = $stmt->rowCount();
-        if($num > 0) {
-            return true;
-        }
-
-        return false;
+        return $stmt->rowCount() > 0;
     }
 }
 ?>

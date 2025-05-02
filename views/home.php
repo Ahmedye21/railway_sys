@@ -1,5 +1,4 @@
 <?php
-    session_start();
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="public/assets/css/index.css">
+    <link rel="stylesheet" href="../public/assets/css/index.css">
 </head>
 <body>
     <!-- Back to top button -->
@@ -48,17 +47,18 @@
                 </ul>
                 <div class="d-flex gap-2">
                     <?php 
-                        if(!isset($_SESSION['user_id'])) {
+                        if (!isset($_SESSION['user_id'])) {
                             echo '
-                                <a href="login.php">
-                                    <button class="btn btn-outline-primary btn-auth">Log In</button>
-                                </a>    
-                                <a href="signup.php">
-                                    <button class="btn btn-primary btn-auth">Sign Up</button>
-                                </a>
+                                <button class="btn btn-outline-primary btn-auth" onclick="navigateTo(\'login\')">Log In</button>
+                                <button class="btn btn-primary btn-auth" onclick="navigateTo(\'signup\')">Sign Up</button>
+                                <script>
+                                function navigateTo(action) {
+                                    window.location.href = "index.php?action=" + action;
+                                }
+                                </script>
                             ';
                         } else {
-                            // Get first letter of user's name for avatar
+
                             $firstLetter = substr($_SESSION['name'], 0, 1);
                             
                             echo '
@@ -71,12 +71,26 @@
                                         </div>
                                     </div>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                                        <li><a class="dropdown-item" href="my-bookings.php"><i class="bi bi-ticket-perforated me-2"></i>My Bookings</a></li>
+                                        <li><a class="dropdown-item" href="index.php?action=profile"><i class="bi bi-person me-2"></i>My Profile</a></li>
+                                        <li><a class="dropdown-item" href="index.php?action=my_bookings"><i class="bi bi-ticket-perforated me-2"></i>My Bookings</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                                     </ul>
                                 </div>
+                                <script>
+                                function logout() {
+                                    fetch("index.php?action=logout", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/x-www-form-urlencoded",
+                                        },
+                                    }).then(response => {
+                                        if (response.redirected) {
+                                            window.location.href = response.url;
+                                        }
+                                    });
+                                }
+                                </script>
                             ';
                         }
                     ?>
