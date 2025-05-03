@@ -5,7 +5,7 @@ class DatabaseConfig {
     private static $username = "root";
     private static $pass = "";
     private static $conn = null;
-    
+     
     public static function getConnection() {
         if (self::$conn === null) {
             try {

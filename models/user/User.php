@@ -1,7 +1,9 @@
 <?php
 // models/User.php
 
-require_once '../core/config.php';
+
+require_once CORE_PATH . '/config.php';
+
 
 class User {
     private $conn;
@@ -11,7 +13,7 @@ class User {
     public $name;
     public $email;
     public $password;
-    public $user_type;
+    public $role;
     public $balance;
     
     public function __construct() {
@@ -32,7 +34,7 @@ class User {
                 name        = :name, 
                 email       = :email, 
                 password    = :password, 
-                user_type   = :user_type,
+                role   = :role,
                 balance     = :balance";
 
         $stmt = $this->conn->prepare($query);
@@ -40,7 +42,7 @@ class User {
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":password", $this->password);
-        $stmt->bindParam(":user_type", $this->user_type);
+        $stmt->bindParam(":role", $this->role);
         $stmt->bindParam(":balance", $this->balance);
         
         if($stmt->execute()) {
@@ -60,7 +62,7 @@ class User {
     }
     
     public function authenticate() {
-        $query = "SELECT id, name, email, password, user_type, balance FROM users 
+        $query = "SELECT id, name, email, password, role, balance FROM users 
                 WHERE email = ? 
                 LIMIT 0,1";
         
@@ -73,7 +75,7 @@ class User {
         if($row && password_verify($this->password, $row['password'])) {
             $this->id           = $row['id'];
             $this->name         = $row['name'];
-            $this->user_type    = $row['user_type'];
+            $this->role    = $row['role'];
             $this->balance      = $row['balance'];
             return true;
         }

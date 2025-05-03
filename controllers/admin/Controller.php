@@ -2,7 +2,7 @@
 
 class AdminDashboardController {
     public function index() {
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
             header("Location: index.php?action=login");
             exit;
         }

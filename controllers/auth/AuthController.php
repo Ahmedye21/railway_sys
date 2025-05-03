@@ -15,7 +15,7 @@ class AuthController {
     
     public function login() {
         if(isset($_SESSION['user_id'])) {
-            $this->redirectBasedOnUserType($_SESSION['user_type']);
+            $this->redirectBasedOnUserType($_SESSION['role']);
             exit;
         }
         
@@ -29,10 +29,10 @@ class AuthController {
             if($this->user->authenticate()) {
                 $_SESSION['user_id']    = $this->user->id;
                 $_SESSION['name']       = $this->user->name;
-                $_SESSION['user_type']  = $this->user->user_type;
+                $_SESSION['role']  = $this->user->role;
                 $_SESSION['balance']    = $this->user->balance;
                 
-                $this->redirectBasedOnUserType($this->user->user_type);
+                $this->redirectBasedOnUserType($this->user->role);
                 exit;
             } else {
                 $error_msg = "Invalid email or password.";
@@ -40,12 +40,12 @@ class AuthController {
         }
         
         // Load the view
-        require_once BASE_PATH . '/views/auth/login.php';
+        require_once VIEWS_PATH . '/auth/login.php';
     }
     
     public function signup() {
         if(isset($_SESSION['user_id'])) {
-            $this->redirectBasedOnUserType($_SESSION['user_type']);
+            $this->redirectBasedOnUserType($_SESSION['role']);
             exit;
         }
         
@@ -57,7 +57,7 @@ class AuthController {
                 $this->user->name = trim($_POST['name']);
                 $this->user->email = trim($_POST['email']);
                 $this->user->password = $_POST['password'];
-                $this->user->user_type = 'user';
+                $this->user->role = 'user';
                 
                 // Validation
                 if(empty($this->user->name)) {
@@ -72,10 +72,10 @@ class AuthController {
                     if($this->user->signup()) {
                         $_SESSION['user_id'] = $this->user->id;
                         $_SESSION['name'] = $this->user->name;
-                        $_SESSION['user_type'] = $this->user->user_type;
+                        $_SESSION['role'] = $this->user->role;
                         $_SESSION['balance'] = $this->user->balance;
                         
-                        $this->redirectBasedOnUserType($this->user->user_type);
+                        $this->redirectBasedOnUserType($this->user->role);
                         exit;
                     } else {
                         $error_msg = "Registration failed. Please try again.";
@@ -87,30 +87,29 @@ class AuthController {
             }
         }
         
-        require_once BASE_PATH . '/views/auth/signup.php';
+        require_once VIEWS_PATH . '/auth/signup.php';
     }
 
     
     public function logout() {
-        $_SESSION = array();
-    
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
+        // Start session if not already started
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-    
+
+        // Unset all session variables
+        $_SESSION = array();
+
+        // Destroy the session
         session_destroy();
-    
+
         // Redirect to home page
         header("Location: " . BASE_URL);
-        exit;
+        exit();
     }
     
-    private function redirectBasedOnUserType($user_type) {
-        if ($user_type == 'admin') {
+    private function redirectBasedOnUserType($role) {
+        if ($role == 'admin') {
             header("Location: index.php?action=admin_dashboard");
         } 
         else {

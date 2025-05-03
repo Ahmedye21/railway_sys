@@ -1,5 +1,5 @@
 <?php
-// config/paths.php
+// public/paths.php
 
 define('APP_ROOT', dirname(__DIR__));
 define('MODELS_PATH', APP_ROOT . '/models');

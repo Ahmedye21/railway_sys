@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -8,13 +6,16 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if user is admin
-if (!isset($_SESSION['role'])) {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php?action=login');
     exit;
 }
 
-if ($_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    // If the user is not an admin, redirect to the index page
+    // You can also show an error message if needed
     header('Location: index.php');
+
     exit;
 }
 ?>
@@ -70,6 +71,77 @@ if ($_SESSION['role'] !== 'admin') {
         .user-avatar.admin {
             background-color: #dc3545 !important;
         }
+
+        .admin-user-dropdown {
+    position: relative;
+}
+
+.user-profile-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    transition: all 0.2s;
+}
+
+.user-profile-btn:hover, .user-profile-btn:focus {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.user-profile-btn::after {
+    display: none;
+}
+
+.admin-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #dc3545;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.user-info {
+    line-height: 1.2;
+}
+
+.user-name {
+    
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.dropdown-menu {
+    min-width: 220px;
+    border: none;
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin: 0.15rem 0.5rem;
+    width: auto;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-item i {
+    width: 18px;
+    text-align: center;
+}
+
     </style>
 </head>
 <body>
@@ -91,29 +163,44 @@ if ($_SESSION['role'] !== 'admin') {
                         <a class="nav-link" href="index.php" target="_blank">View Site</a>
                     </li>
                 </ul>
-                <div class="d-flex gap-2">
+                <div class="admin-user-dropdown">
                     <?php
-                    // Get first letter of admin's name for avatar
-                    $firstLetter = substr($_SESSION['name'], 0, 1);
+                    // Sanitize and get the first letter of the name
+                    $name = htmlspecialchars($_SESSION['name'] ?? 'A');
+                    $firstLetter = strtoupper(substr($name, 0, 1));
+                    ?>
                     
-                    echo '
-                        <div class="dropdown">
-                            <div class="user-account dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="user-avatar admin">' . $firstLetter . '</div>
-                                <div class="user-info">
-                                    <span class="user-name text-white">' . $_SESSION['name'] . '</span>
-                                    <span class="user-role text-light">Administrator</span>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle user-profile-btn" type="button" id="adminDropdown" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="d-flex align-items-center">
+                                <span class="user-avatar admin-avatar me-2"><?= $firstLetter ?></span>
+                                <div class="user-info text-start">
+                                    <div class="user-name"><?= $name ?></div>
+                                    <small class="d-block text-light opacity-75">Administrator</small>
                                 </div>
                             </div>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="admin_profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                                <li><a class="dropdown-item" href="admin_settings.php"><i class="bi bi-gear me-2"></i>Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                            </ul>
-                        </div>
-                    ';
-                    ?>
+                        </button>
+                        
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="adminDropdown">
+                            <li>
+                                <a class="dropdown-item" href="index.php?action=admin_profile">
+                                    <i class="bi bi-person-fill me-2"></i>My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="index.php?action=admin_settings">
+                                    <i class="bi bi-gear-fill me-2"></i>Settings
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="index.php?action=logout">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,6 +228,10 @@ if ($_SESSION['role'] !== 'admin') {
                     <a class="nav-link mb-1" href="admin_schedules.php">
                         <i class="bi bi-calendar-check me-2"></i> Schedules
                     </a>
+                    <a class="nav-link mb-1" href="admin_users.php">
+                        <i class="bi bi-buildings"></i> Cities 
+                    </a>
+
                     <a class="nav-link mb-1" href="admin_stations.php">
                         <i class="bi bi-building me-2"></i> Stations
                     </a>
@@ -150,6 +241,10 @@ if ($_SESSION['role'] !== 'admin') {
                     <a class="nav-link mb-1" href="admin_users.php">
                         <i class="bi bi-people me-2"></i> Users
                     </a>
+
+
+
+
                     <a class="nav-link mb-1" href="admin_reports.php">
                         <i class="bi bi-graph-up me-2"></i> Reports
                     </a>
@@ -157,9 +252,10 @@ if ($_SESSION['role'] !== 'admin') {
                     <a class="nav-link mb-1" href="admin_settings.php">
                         <i class="bi bi-gear me-2"></i> Settings
                     </a>
-                    <a class="nav-link" href="logout.php">
+                    <a class="nav-link" href="index.php?action=logout">
                         <i class="bi bi-box-arrow-right me-2"></i> Logout
                     </a>
+
                 </nav>
             </div>
             
