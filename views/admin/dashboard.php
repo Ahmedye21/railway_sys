@@ -159,9 +159,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                     <li class="nav-item">
                         <a class="nav-link active" href="admin_dashboard.php">Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php" target="_blank">View Site</a>
-                    </li>
                 </ul>
                 <div class="admin-user-dropdown">
                     <?php
