@@ -34,11 +34,16 @@ switch ($action) {
         (new HomeController())->home();
         break;
 
-    case 'seach_trains':
+    case 'search_trains':
         require_once CONTROLLERS_PATH . '/train/Controller.php';
-        $searchController = new SearchController(DatabaseConfig::getConnection());
-        $searchController->search();
+        (new SearchResultsController())->search();
         break;
+
+    case 'profile':
+        require_once CONTROLLERS_PATH . '/user/Controller.php';
+        (new UserDashboardController())->index();
+        break;
+
 
     // You can uncomment these as you implement them
     /*

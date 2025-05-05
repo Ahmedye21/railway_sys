@@ -259,8 +259,8 @@
                     <h5 class="modal-title" id="searchTicketsModalLabel">Find Your Train</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form action="<?php echo BASE_URL; ?>/search" method="POST">
+                <div class="modal-body"> 
+                    <form action="<?php echo BASE_URL; ?>?action=search_trains" method="POST">
                         
                         <!-- Trip Type -->
                         <div class="mb-4">
@@ -308,36 +308,30 @@
                         <div class="row mb-3 align-items-end">
                             <div class="col">
                                 <label for="departureStation" class="form-label">Departure</label>
-                                <select class="form-select station-select" name="departureStation" id="departureStation" required>
+                                <select class="form-select" name="departureStation" id="departureStation" required>
                                     <option value="">Select station</option>
                                     <?php foreach ($stations as $station): ?>
-                                        <option value="<?php echo htmlspecialchars($station['name']); ?>" 
-                                                data-code="<?php echo htmlspecialchars($station['code']); ?>">
-                                            <?php echo htmlspecialchars($station['name']); ?> (<?php echo htmlspecialchars($station['code']); ?>)
-                                        </option>
+                                        <option value="<?php echo htmlspecialchars($station['name']); ?>"><?php echo htmlspecialchars($station['name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             
                             <div class="col-auto px-0">
-                                <button type="button" class="btn btn-light swap-btn" id="swapStations" aria-label="Swap stations">
+                                <button type="button" class="btn btn-light swap-btn" id="swapStations">
                                     <i class="bi bi-arrow-left-right"></i>
                                 </button>
                             </div>
                             
                             <div class="col">
                                 <label for="arrivalStation" class="form-label">Arrival</label>
-                                <select class="form-select station-select" name="arrivalStation" id="arrivalStation" required>
+                                <select class="form-select" name="arrivalStation" id="arrivalStation" required>
                                     <option value="">Select station</option>
                                     <?php foreach ($stations as $station): ?>
-                                        <option value="<?php echo htmlspecialchars($station['name']); ?>"
-                                                data-code="<?php echo htmlspecialchars($station['code']); ?>">
-                                            <?php echo htmlspecialchars($station['name']); ?> (<?php echo htmlspecialchars($station['code']); ?>)
-                                        </option>
+                                        <option value="<?php echo htmlspecialchars($station['name']); ?>"><?php echo htmlspecialchars($station['name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div>
+                        </div>  
                         
                         <!-- Dates -->
                         <div class="row" id="dateSelectors">
@@ -400,6 +394,37 @@
             departureInput.value = arrivalInput.value;
             arrivalInput.value = temp;
         });
+
+
+        document.getElementById('searchButton').addEventListener('click', function(e) {
+        const form = document.querySelector('#searchTicketsModal form');
+        const errorDiv = document.getElementById('formErrors');
+        
+        // Clear previous errors
+        errorDiv.classList.add('d-none');
+        errorDiv.innerHTML = '';
+        
+        // Validate stations
+        if (form.departureStation.value === form.arrivalStation.value) {
+            e.preventDefault();
+            errorDiv.classList.remove('d-none');
+            errorDiv.innerHTML = 'Departure and arrival stations cannot be the same';
+            return;
+        }
+        
+        // Validate return date for round trips
+        if (form.tripType.value === 'roundTrip' && !form.returnDate.value) {
+            e.preventDefault();
+            errorDiv.classList.remove('d-none');
+            errorDiv.innerHTML = 'Return date is required for round trips';
+            return;
+        }
+        
+        // Show loading spinner
+        this.querySelector('.submit-text').textContent = 'Searching...';
+        this.querySelector('.spinner-border').classList.remove('d-none');
+    });
+
     </script>
 </body>
 </html>

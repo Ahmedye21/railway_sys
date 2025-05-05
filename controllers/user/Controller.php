@@ -8,7 +8,6 @@ class UserDashboardController {
             exit;
         }
         
-        // Show user dashboard
         require_once VIEWS_PATH . '/user/dashboard.php';
     }
 }

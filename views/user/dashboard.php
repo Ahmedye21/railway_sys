@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -115,14 +114,14 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                                 <div class="user-avatar">' . $firstLetter . '</div>
                                 <div class="user-info">
                                     <span class="user-name">' . $_SESSION['name'] . '</span>
-                                    <span class="user-balance">₹' . number_format($_SESSION['balance'], 2) . '</span>
+                                    <span class="user-balance">EGP ' . number_format($_SESSION['balance'], 2) . '</span>
                                 </div>
                             </div>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
                                 <li><a class="dropdown-item" href="my-bookings.php"><i class="bi bi-ticket-perforated me-2"></i>My Bookings</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                                <li><a class="dropdown-item" href="'.BASE_URL.'?action=logout"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                             </ul>
                         </div>
                     ';
@@ -148,7 +147,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                             <div class="mt-3 d-flex justify-content-center">
                                 <span class="badge bg-success p-2">
                                     <i class="bi bi-wallet2 me-1"></i>
-                                    Balance: ₹<?php echo number_format($_SESSION['balance'], 2); ?>
+                                    Balance: EGP <?php echo number_format($_SESSION['balance'], 2); ?>
                                 </span>
                             </div>
                         </div>
@@ -208,7 +207,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                         <div class="dashboard-stat bg-success bg-opacity-10 h-100">
                             <h3 class="fs-5 text-success">Wallet Balance</h3>
                             <div class="d-flex align-items-center">
-                                <h2 class="display-4 mb-0 me-2">₹<?php echo number_format($_SESSION['balance'], 0); ?></h2>
+                                <h2 class="display-4 mb-0 me-2">EGP <?php echo number_format($_SESSION['balance'], 0); ?></h2>
                                 <i class="bi bi-wallet2 fs-1 text-success ms-auto"></i>
                             </div>
                             <small><a href="wallet.php" class="text-success">Add funds</a></small>
@@ -390,7 +389,7 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                 <div class="col-md-2 mb-4">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="index.php"><i class="bi bi-house-door me-2"></i>Home</a></li>
+                        <li><a href=""><i class="bi bi-house-door me-2"></i>Home</a></li>
                         <li><a href="time-tracking.html"><i class="bi bi-clock me-2"></i>Train Tracking</a></li>
                         <li><a href="schedule.html"><i class="bi bi-calendar me-2"></i>Schedules</a></li>
                         <li><a href="contact.html"><i class="bi bi-chat me-2"></i>Contact Us</a></li>

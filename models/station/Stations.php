@@ -16,10 +16,17 @@ class StationModel {
      */
     public function getAllStations() {
         try {
-            $sql = "SELECT station_id, name, code, city FROM stations ORDER BY name";
+            $sql = "SELECT station_id, name FROM stations WHERE is_active = 1 ORDER BY name";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (empty($results)) {
+                error_log("No stations found in the database.");
+            }
+            
+            return $results;
         } catch (PDOException $e) {
             error_log("StationModel Error: " . $e->getMessage());
             return [];

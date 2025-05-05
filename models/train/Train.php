@@ -1,30 +1,24 @@
-<?
+<?php
 
-require_once CONFIG_PATH . 'config.php';
-/**
- * Model for train and routes related operations
- */
-class TrainModel {
+
+class TrainSearch {
     private $pdo;
     
-    public function __construct() {
-        $this->pdo = DatabaseConfig::getConnection();
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
     
     /**
-     * Search for trains between departure and arrival stations on a specific day
-     * 
-     * @param string $departureStation Departure station name
-     * @param string $arrivalStation Arrival station name
-     * @param string $departureDate Departure date (YYYY-MM-DD)
-     * @return array List of available trains
+     * Search for trains between two stations on a specific date
      */
     public function searchTrains($departureStation, $arrivalStation, $departureDate) {
+        $availableTrains = [];
+        
         try {
             // Convert date to day of week
             $departureDateObj = new DateTime($departureDate);
             $dayOfWeek = $departureDateObj->format('l'); // Full day name
-            
+
             // Find all possible routes between departure and arrival stations
             $sql = "SELECT DISTINCT 
                         r.route_id,
@@ -76,18 +70,36 @@ class TrainModel {
                 ':dayOfWeek' => $dayOfWeek
             ]);
             
-            $trainResults = $stmt->fetchAll();
-            $availableTrains = [];
+            $trainResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             foreach ($trainResults as $train) {
                 // Get all stations on this route for this train
-                $stations = $this->getRouteStations(
-                    $train['route_id'], 
-                    $train['schedule_id'], 
-                    $train['departure_sequence'], 
-                    $train['arrival_sequence']
-                );
+                $stationsSql = "SELECT 
+                                    s.name AS station_name,
+                                    rs.sequence_number,
+                                    sd.arrival_time,
+                                    sd.departure_time
+                                FROM 
+                                    route_stations rs
+                                JOIN 
+                                    stations s ON rs.station_id = s.station_id
+                                LEFT JOIN
+                                    schedule_details sd ON sd.station_id = s.station_id AND sd.schedule_id = :schedule_id
+                                WHERE 
+                                    rs.route_id = :route_id
+                                    AND rs.sequence_number BETWEEN :departure_sequence AND :arrival_sequence
+                                ORDER BY 
+                                    rs.sequence_number";
+                                    
+                $stationsStmt = $this->pdo->prepare($stationsSql);
+                $stationsStmt->execute([
+                    ':schedule_id' => $train['schedule_id'],
+                    ':route_id' => $train['route_id'],
+                    ':departure_sequence' => $train['departure_sequence'],
+                    ':arrival_sequence' => $train['arrival_sequence']
+                ]);
                 
+                $stations = $stationsStmt->fetchAll(PDO::FETCH_ASSOC);
                 $stationNames = array_column($stations, 'station_name');
                 
                 // Calculate travel time
@@ -130,69 +142,12 @@ class TrainModel {
             return $availableTrains;
             
         } catch (PDOException $e) {
-            // Log error
-            return [];
+            throw new Exception('Database error: ' . $e->getMessage());
         }
     }
     
     /**
-     * Get stations on a route between departure and arrival sequences
-     * 
-     * @param int $routeId
-     * @param int $scheduleId
-     * @param int $departureSequence
-     * @param int $arrivalSequence
-     * @return array List of stations
+     * Get all available stations
      */
-    public function getRouteStations($routeId, $scheduleId, $departureSequence, $arrivalSequence) {
-        try {
-            $sql = "SELECT 
-                        s.name AS station_name,
-                        rs.sequence_number,
-                        sd.arrival_time,
-                        sd.departure_time
-                    FROM 
-                        route_stations rs
-                    JOIN 
-                        stations s ON rs.station_id = s.station_id
-                    LEFT JOIN
-                        schedule_details sd ON sd.station_id = s.station_id AND sd.schedule_id = :schedule_id
-                    WHERE 
-                        rs.route_id = :route_id
-                        AND rs.sequence_number BETWEEN :departure_sequence AND :arrival_sequence
-                    ORDER BY 
-                        rs.sequence_number";
-                        
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
-                ':schedule_id' => $scheduleId,
-                ':route_id' => $routeId,
-                ':departure_sequence' => $departureSequence,
-                ':arrival_sequence' => $arrivalSequence
-            ]);
-            
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            // Log error
-            return [];
-        }
-    }
-    
-    /**
-     * Get train details by ID
-     * 
-     * @param int $trainId
-     * @return array|bool Train data or false if not found
-     */
-    public function getTrainById($trainId) {
-        try {
-            $sql = "SELECT * FROM trains WHERE train_id = :train_id";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':train_id' => $trainId]);
-            return $stmt->fetch();
-        } catch (PDOException $e) {
-            // Log error
-            return false;
-        }
-    }
+
 }

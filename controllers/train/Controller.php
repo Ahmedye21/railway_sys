@@ -1,159 +1,148 @@
 <?php
+
 require_once MODELS_PATH . '/train/Train.php';
 require_once MODELS_PATH . '/station/Stations.php';
 
-class SearchController {
-    private $stationModel;
-    private $trainModel;
+
+class SearchResultsController {
+    private $trainSearchModel;
+    private $searchParams = [];
+    private $errors = [];
+    private $availableTrains = [];
     
     public function __construct() {
-        $this->stationModel = new StationModel();
-        $this->trainModel = new TrainModel();
-    }
-    
-    /**
-     * Show search form with stations
-     */
-    public function showSearchForm() {
         try {
-            $stations = $this->stationModel->getAllStations();
-            
-            if (empty($stations)) {
-                throw new Exception("No stations available. Please try again later.");
-            }
-            
-            // Pass data to view
-            $data = [
-                'stations' => $stations,
-                'page_title' => 'Search Trains'
-            ];
-            
-            include VIEWS_PATH . 'train/search_trains.php';
-            
+            $pdo = DatabaseConfig::getConnection();
+            $this->trainSearchModel = new TrainSearch($pdo);
+            $this->processSearchForm();
         } catch (Exception $e) {
-            $this->handleError($e->getMessage());
+            $this->errors[] = $e->getMessage();
         }
     }
     
     /**
-     * Process search and show results
+     * Process the search form data
      */
+    private function processSearchForm() {
+        error_log(print_r($_POST, true));
+        // Process the search form
+        $this->searchParams = [
+            'departureStation' => isset($_POST['departureStation']) ? $_POST['departureStation'] : '',
+            'arrivalStation' => isset($_POST['arrivalStation']) ? $_POST['arrivalStation'] : '',
+            'departureDate' => isset($_POST['departureDate']) ? $_POST['departureDate'] : '',
+            'tripType' => isset($_POST['tripType']) ? $_POST['tripType'] : 'oneWay',
+            'travelClass' => isset($_POST['travelClass']) ? $_POST['travelClass'] : 'second',
+            'returnDate' => isset($_POST['returnDate']) ? $_POST['returnDate'] : ''
+        ];
+        
+        // Validate input
+        $this->validateSearchParams();
+        
+        // Search for trains if no errors
+        if (empty($this->errors)) {
+            try {
+                $this->availableTrains = $this->trainSearchModel->searchTrains(
+                    $this->searchParams['departureStation'],
+                    $this->searchParams['arrivalStation'],
+                    $this->searchParams['departureDate']
+                );
+            } catch (Exception $e) {
+                $this->errors[] = $e->getMessage();
+            }
+        }
+    }
+    
+    /**
+     * Validate the search parameters
+     */
+    private function validateSearchParams() {
+        $this->errors = []; // Reset errors
+        
+        if (empty($this->searchParams['departureStation'])) {
+            $this->errors[] = 'Please select a departure station.';
+        }
+        
+        if (empty($this->searchParams['arrivalStation'])) {
+            $this->errors[] = 'Please select an arrival station.';
+        }
+        
+        if (!empty($this->searchParams['departureStation']) && 
+            !empty($this->searchParams['arrivalStation']) &&
+            $this->searchParams['departureStation'] === $this->searchParams['arrivalStation']) {
+            $this->errors[] = 'Departure and arrival stations cannot be the same.';
+        }
+        
+        if (empty($this->searchParams['departureDate'])) {
+            $this->errors[] = 'Please select a departure date.';
+        }
+        
+        if ($this->searchParams['tripType'] === 'roundTrip' && empty($this->searchParams['returnDate'])) {
+            $this->errors[] = 'Please select a return date.';
+        }
+    }
+    
+    /**
+     * Format the departure date for display
+     */
+    public function getFormattedDepartureDate() {
+        $formattedDate = '';
+        if (!empty($this->searchParams['departureDate'])) {
+            $dateObj = new DateTime($this->searchParams['departureDate']);
+            $formattedDate = $dateObj->format('D, M j, Y');
+        }
+        return $formattedDate;
+    }
+    
+    /**
+     * Format the return date for display
+     */
+    public function getFormattedReturnDate() {
+        $formattedDate = '';
+        if ($this->searchParams['tripType'] === 'roundTrip' && !empty($this->searchParams['returnDate'])) {
+            $dateObj = new DateTime($this->searchParams['returnDate']);
+            $formattedDate = $dateObj->format('D, M j, Y');
+        }
+        return $formattedDate;
+    }
+    
+    /**
+     * Get all search parameters
+     */
+    public function getSearchParams() {
+        return $this->searchParams;
+    }
+    
+    /**
+     * Get all validation errors
+     */
+    public function getErrors() {
+        return $this->errors;
+    }
+    
+    /**
+     * Get search results (available trains)
+     */
+    public function getAvailableTrains() {
+        return $this->availableTrains;
+    }
+    
+    /**
+     * Render the search results page
+     */
+    public function renderPage() {
+        // Load additional data needed for the view
+        $formattedDepartureDate = $this->getFormattedDepartureDate();
+        $formattedReturnDate = $this->getFormattedReturnDate();
+        
+        // Include the view file
+        include VIEWS_PATH . '/train/search.php';;
+    }
     public function search() {
-        try {
-            // Sanitize input
-            $input = $this->sanitizeSearchInput($_POST);
-            
-            // Validate input
-            $errors = $this->validateSearchInput(
-                $input['departureStation'],
-                $input['arrivalStation'],
-                $input['departureDate'],
-                $input['tripType'],
-                $input['returnDate']
-            );
-            
-            if (!empty($errors)) {
-                throw new Exception(implode("<br>", $errors));
-            }
-            
-            // Search for trains
-            $availableTrains = $this->trainModel->searchTrains(
-                $input['departureStation'],
-                $input['arrivalStation'],
-                $input['departureDate'],
-                $input['travelClass']
-            );
-            
-            // Prepare data for view
-            $data = [
-                'stations' => $this->stationModel->getAllStations(),
-                'trains' => $availableTrains,
-                'search_params' => $input,
-                'formatted_departure_date' => $this->formatDateForDisplay($input['departureDate']),
-                'formatted_return_date' => $input['tripType'] === 'roundTrip' 
-                    ? $this->formatDateForDisplay($input['returnDate']) 
-                    : null,
-                'page_title' => 'Search Results'
-            ];
-            
-            include VIEWS_PATH . 'train/search_results.php';
-            
-        } catch (Exception $e) {
-            $this->handleError($e->getMessage());
-        }
+        $this->processSearchForm();
+        $this->renderPage();
     }
-    
-    /**
-     * Sanitize search input
-     */
-    private function sanitizeSearchInput($postData) {
-        return [
-            'departureStation' => trim($postData['departureStation'] ?? ''),
-            'arrivalStation' => trim($postData['arrivalStation'] ?? ''),
-            'departureDate' => trim($postData['departureDate'] ?? ''),
-            'tripType' => trim($postData['tripType'] ?? 'oneWay'),
-            'travelClass' => trim($postData['travelClass'] ?? 'second'),
-            'returnDate' => trim($postData['returnDate'] ?? '')
-        ];
-    }
-    
-    /**
-     * Handle errors consistently
-     */
-    private function handleError($message) {
-        $data = [
-            'error_message' => $message,
-            'stations' => $this->stationModel->getAllStations(),
-            'page_title' => 'Error'
-        ];
-        
-        include VIEWS_PATH . 'error.php';
-    }
-    
-    /**
-     * Validate search input
-     */
-    private function validateSearchInput($departureStation, $arrivalStation, $departureDate, $tripType, $returnDate) {
-        $errors = [];
-        
-        if (empty($departureStation)) {
-            $errors[] = "Departure station is required.";
-        }
-        
-        if (empty($arrivalStation)) {
-            $errors[] = "Arrival station is required.";
-        }
-        
-        if (empty($departureDate)) {
-            $errors[] = "Departure date is required.";
-        } elseif (!$this->isValidDate($departureDate)) {
-            $errors[] = "Invalid departure date format.";
-        }
-        
-        if ($tripType === 'roundTrip' && empty($returnDate)) {
-            $errors[] = "Return date is required for round trips.";
-        } elseif ($tripType === 'roundTrip' && !$this->isValidDate($returnDate)) {
-            $errors[] = "Invalid return date format.";
-        }
-        
-        return $errors;
-    }
-    
-    /**
-     * Check if a date is valid
-     */
-    private function isValidDate($date) {
-        $d = DateTime::createFromFormat('Y-m-d', $date);
-        return $d && $d->format('Y-m-d') === $date;
-    }
-
-    /**
-     * Format a date for display
-     */
-    private function formatDateForDisplay($date) {
-        $formattedDate = DateTime::createFromFormat('Y-m-d', $date);
-        return $formattedDate ? $formattedDate->format('d M Y') : $date;
-    }
-    
-    // ... keep the existing validateSearchInput and formatDateForDisplay methods
 }
+
+// Instantiate and run the controller
+$controller = new SearchResultsController();
+$controller->renderPage();

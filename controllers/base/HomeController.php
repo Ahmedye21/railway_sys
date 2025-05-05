@@ -10,7 +10,11 @@ class HomeController {
     }
 
     public function home() {
+        $stationModel   = new StationModel();
+        $stations       = $stationModel->getAllStations();
+        
 
+        
         require_once VIEWS_PATH . '/home.php';
     }
 }
