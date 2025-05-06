@@ -9,7 +9,7 @@ class User {
     private $conn;
     private $table = "users";
     
-    public $id;
+    public $user_id;
     public $name;
     public $email;
     public $password;
@@ -46,7 +46,7 @@ class User {
         $stmt->bindParam(":balance", $this->balance);
         
         if($stmt->execute()) {
-            $this->id = $this->getNextId();
+            $this->user_id = $this->getNextId();
             return true;
         }
         
@@ -54,7 +54,7 @@ class User {
     }
 
     private function getNextId() {
-        $query = "SELECT MAX(id) + 1 AS next_id FROM users";
+        $query = "SELECT MAX(user_id) + 1 AS next_id FROM users";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -62,7 +62,7 @@ class User {
     }
     
     public function authenticate() {
-        $query = "SELECT id, name, email, password, role, balance FROM users 
+        $query = "SELECT user_id, name, email, password, role, balance FROM users 
                 WHERE email = ? 
                 LIMIT 0,1";
         
@@ -73,9 +73,9 @@ class User {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if($row && password_verify($this->password, $row['password'])) {
-            $this->id           = $row['id'];
+            $this->user_id      = $row['user_id'];
             $this->name         = $row['name'];
-            $this->role    = $row['role'];
+            $this->role         = $row['role'];
             $this->balance      = $row['balance'];
             return true;
         }
@@ -84,7 +84,7 @@ class User {
     }
     
     private function emailExists() {
-        $query = "SELECT id FROM users WHERE email = ? LIMIT 0,1";
+        $query = "SELECT user_id FROM users WHERE email = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
