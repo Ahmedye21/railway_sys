@@ -7,7 +7,7 @@ if(isset($_SESSION['user_id'])) {
     } elseif($_SESSION['role'] == 'station_master') {
         header("Location: stationmaster_dashboard.php");
     } else {
-        header("Location: user_dashboard.php");
+        header("Location: index.php");
     }
     exit;
 }
@@ -34,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif($_SESSION['role'] == 'station_master') {
             header("Location: stationmaster_dashboard.php");
         } else {
-            header("Location: user_dashboard.php");
+            header("Location: index.php");
         }
         exit;
     } else {

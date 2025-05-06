@@ -3,7 +3,7 @@ class DatabaseConfig {
     private static $host = "localhost";
     private static $dbname = "railway_sysdb";
     private static $username = "root";
-    private static $pass = "root";
+    private static $pass = "";
     private static $conn = null;
     
     public static function getConnection() {

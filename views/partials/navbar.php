@@ -51,7 +51,7 @@ require_once '../paths.php';
                                         </div>
                                     </div>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
+                                        <li><a class="dropdown-item" href="user_dashboard.php"><i class="bi bi-person me-2"></i>My Profile</a></li>
                                         <li><a class="dropdown-item" href="my-bookings.php"><i class="bi bi-ticket-perforated me-2"></i>My Bookings</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="' . BASE_URL . 'backend/logout.php"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
