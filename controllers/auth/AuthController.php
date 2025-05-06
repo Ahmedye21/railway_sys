@@ -27,7 +27,7 @@ class AuthController {
             $this->user->password = $_POST['password'];
             
             if($this->user->authenticate()) {
-                $_SESSION['user_id']    = $this->user->id;
+                $_SESSION['user_id']    = $this->user->user_id;
                 $_SESSION['name']       = $this->user->name;
                 $_SESSION['role']  = $this->user->role;
                 $_SESSION['balance']    = $this->user->balance;
@@ -70,7 +70,7 @@ class AuthController {
                     $error_msg = "Password must be at least 6 characters.";
                 } else {
                     if($this->user->signup()) {
-                        $_SESSION['user_id'] = $this->user->id;
+                        $_SESSION['user_id'] = $this->user->user_id;
                         $_SESSION['name'] = $this->user->name;
                         $_SESSION['role'] = $this->user->role;
                         $_SESSION['balance'] = $this->user->balance;
@@ -104,7 +104,7 @@ class AuthController {
         session_destroy();
 
         // Redirect to home page
-        header("Location: " . BASE_URL);
+        header("Location: index.php");
         exit();
     }
     
