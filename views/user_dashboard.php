@@ -88,7 +88,7 @@ require_once BACKEND_PATH . 'user_dashboard.php';
                             <div class="mt-3 d-flex justify-content-center">
                                 <span class="badge bg-success p-2">
                                     <i class="bi bi-wallet2 me-1"></i>
-                                    Balance: ₹<?php echo number_format($_SESSION['balance'], 2); ?>
+                                    Balance: EGP<?php echo number_format($_SESSION['balance'], 2); ?>
                                 </span>
                             </div>
                         </div>
@@ -148,7 +148,7 @@ require_once BACKEND_PATH . 'user_dashboard.php';
                         <div class="dashboard-stat bg-success bg-opacity-10 h-100">
                             <h3 class="fs-5 text-success">Wallet Balance</h3>
                             <div class="d-flex align-items-center">
-                                <h2 class="display-4 mb-0 me-2">₹<?php echo number_format($_SESSION['balance'], 0); ?></h2>
+                                <h2 class="display-4 mb-0 me-2">EGP<?php echo number_format($_SESSION['balance'], 0); ?></h2>
                                 <i class="bi bi-wallet2 fs-1 text-success ms-auto"></i>
                             </div>
                             <small><a href="wallet.php" class="text-success">Add funds</a></small>
@@ -252,7 +252,7 @@ require_once BACKEND_PATH . 'user_dashboard.php';
                                     <div class="d-flex align-items-center">
                                         <div class="flex-grow-1">
                                             <h6 class="mb-0">Added Money to Wallet</h6>
-                                            <small class="text-muted">Added ₹2,000 to your wallet</small>
+                                            <small class="text-muted">Added EGP2,000 to your wallet</small>
                                         </div>
                                         <small class="text-nowrap">Yesterday</small>
                                     </div>

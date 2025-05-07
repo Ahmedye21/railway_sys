@@ -161,10 +161,10 @@ require_once BACKEND_PATH . 'search_results.php';
                                                     <div class="mb-3">
                                                         <?php if ($travelClass === 'first'): ?>
                                                             <div class="text-muted small">First Class</div>
-                                                            <div class="fs-3 fw-bold text-primary">₹<?php echo number_format($train['first_class_price'], 2); ?></div>
+                                                            <div class="fs-3 fw-bold text-primary">EGP<?php echo number_format($train['first_class_price'], 2); ?></div>
                                                         <?php else: ?>
                                                             <div class="text-muted small">Second Class</div>
-                                                            <div class="fs-3 fw-bold text-primary">₹<?php echo number_format($train['second_class_price'], 2); ?></div>
+                                                            <div class="fs-3 fw-bold text-primary">EGP<?php echo number_format($train['second_class_price'], 2); ?></div>
                                                         <?php endif; ?>
                                                         <div class="text-muted small">per person</div>
                                                     </div>

@@ -105,10 +105,10 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1">
                                         <h3 class="fs-5">Revenue</h3>
-                                        <h2 class="display-5 mb-0">₹98.5K</h2>
+                                        <h2 class="display-5 mb-0"EGP98.5K</h2>
                                         <small>+8.3% from last month</small>
                                     </div>
-                                    <i class="bi bi-currency-rupee fs-1 ms-auto"></i>
+                                    <i class="bi bi-currency-pound fs-1 ms-auto"></i>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <td>Delhi → Mumbai</td>
                                                 <td>20 Jun 2025</td>
                                                 <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>₹1,450</td>
+                                                <td>EGP1,450</td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -195,7 +195,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <td>Bangalore → Chennai</td>
                                                 <td>21 Jun 2025</td>
                                                 <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                                <td>₹850</td>
+                                                <td>EGP850</td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -216,7 +216,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <td>Kolkata → Hyderabad</td>
                                                 <td>22 Jun 2025</td>
                                                 <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>₹1,820</td>
+                                                <td>EGP1,820</td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction3" data-bs-toggle="dropdown" aria-expanded="false">
@@ -237,7 +237,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <td>Pune → Mumbai</td>
                                                 <td>23 Jun 2025</td>
                                                 <td><span class="badge bg-danger">Cancelled</span></td>
-                                                <td>₹550</td>
+                                                <td>EGP550</td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction4" data-bs-toggle="dropdown" aria-expanded="false">
@@ -258,7 +258,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <td>Delhi → Ahmedabad</td>
                                                 <td>24 Jun 2025</td>
                                                 <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>₹1,250</td>
+                                                <td>EGP1,250</td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction5" data-bs-toggle="dropdown" aria-expanded="false">
@@ -371,7 +371,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <small>Rajdhani Express</small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-success p-2">₹245,600</span>
+                                                <span class="badge bg-success p-2">EGP245,600</span>
                                                 <div class="small text-success">+12%</div>
                                             </div>
                                         </div>
@@ -383,7 +383,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <small>Shatabdi Express</small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-success p-2">₹183,200</span>
+                                                <span class="badge bg-success p-2">EGP183,200</span>
                                                 <div class="small text-success">+8%</div>
                                             </div>
                                         </div>
@@ -395,7 +395,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <small>Duronto Express</small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-success p-2">₹156,800</span>
+                                                <span class="badge bg-success p-2">EGP156,800</span>
                                                 <div class="small text-success">+5%</div>
                                             </div>
                                         </div>
@@ -407,7 +407,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <small>Tejas Express</small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-danger p-2">₹124,500</span>
+                                                <span class="badge bg-danger p-2">EGP124,500</span>
                                                 <div class="small text-danger">-3%</div>
                                             </div>
                                         </div>
@@ -419,7 +419,7 @@ require_once BACKEND_PATH . 'admin_dashboard.php';
                                                 <small>Charminar Express</small>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge bg-success p-2">₹98,700</span>
+                                                <span class="badge bg-success p-2">EGP98,700</span>
                                                 <div class="small text-success">+2%</div>
                                             </div>
                                         </div>

@@ -47,7 +47,7 @@ require_once '../paths.php';
                                         <div class="user-avatar">' . $firstLetter . '</div>
                                         <div class="user-info">
                                             <span class="user-name">' . $_SESSION['name'] . '</span>
-                                            <span class="user-balance">₹' . number_format($_SESSION['balance'], 2) . '</span>
+                                            <span class="user-balance">EGP' . number_format($_SESSION['balance'], 2) . '</span>
                                         </div>
                                     </div>
                                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
