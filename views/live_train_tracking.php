@@ -20,43 +20,7 @@ require_once BACKEND_PATH . 'index.php';
 
 
 <body>
-    <!-- Back to top button -->
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="bi bi-arrow-up"></i>
-    </a>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand text-primary" href="index.php">
-                <i class="bi bi-train-front-fill me-2"></i>RailConnect
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Train Tracking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="schedule.html">Schedules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                <div class="d-flex gap-2" id="authButtons">
-                    <!-- PHP dynamic content will be inserted here -->
-                    <button class="btn btn-outline-primary btn-auth" onclick="navigateTo('login')">Log In</button>
-                    <button class="btn btn-primary btn-auth" onclick="navigateTo('signup')">Sign Up</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <?php include(PARTIALS_PATH . 'navbar.php'); ?>
 
     <!-- Hero Section -->
     <section class="hero-section text-center">
@@ -260,24 +224,6 @@ require_once BACKEND_PATH . 'index.php';
     <!-- Bootstrap JS with Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Show back to top button on scroll
-        window.addEventListener('scroll', function() {
-            const backToTopButton = document.getElementById('backToTop');
-            if (window.pageYOffset > 300) {
-                backToTopButton.style.opacity = '1';
-            } else {
-                backToTopButton.style.opacity = '0';
-            }
-        });
-        
-        // Smooth scroll to top
-        document.getElementById('backToTop').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
         
         // Handle form submission
         document.getElementById('trainTrackingForm').addEventListener('submit', function(e) {
@@ -593,29 +539,6 @@ require_once BACKEND_PATH . 'index.php';
             align-items: center;
             justify-content: center;
             color: #6c757d;
-        }
-        
-        .back-to-top {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background-color: #0d6efd;
-            color: white;
-            border-radius: 50%;
-            opacity: 0;
-            transition: all 0.3s;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-        }
-        
-        .back-to-top:hover {
-            background-color: #0b5ed7;
-            color: white;
         }
         
         footer {
