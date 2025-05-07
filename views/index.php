@@ -142,7 +142,7 @@ require_once BACKEND_PATH . 'index.php';
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="#"><i class="bi bi-house-door me-2"></i>Home</a></li>
-                        <li><a href="time-tracking.html"><i class="bi bi-clock me-2"></i>Train Tracking</a></li>
+                        <li><a href="live_train_tracking.php"><i class="bi bi-clock me-2"></i>Train Tracking</a></li>
                         <li><a href="schedule.html"><i class="bi bi-calendar me-2"></i>Schedules</a></li>
                         <li><a href="contact.html"><i class="bi bi-chat me-2"></i>Contact Us</a></li>
                     </ul>

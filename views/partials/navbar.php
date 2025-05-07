@@ -17,10 +17,10 @@ require_once '../paths.php';
                         <a class="nav-link active" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="time-tracking.html">Train Tracking</a>
+                        <a class="nav-link" href="live_train_tracking.php">Train Tracking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="schedule.html">Schedules</a>
+                        <a class="nav-link" href="station_arrivals.php">Schedules</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>
