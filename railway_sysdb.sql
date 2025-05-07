@@ -216,10 +216,10 @@ CREATE TABLE seat_inventory (
 
 -- Insert sample users
 INSERT INTO users (name, email, password, role, balance) VALUES
-('Admin User', 'admin@railconnect.com', '$2y$10$FMiMxoN8kw8qO8hh1H9AfuIKYdly9vY6FqMB3FzMC7xUBhCH9Irja', 'admin', 0.00),  -- Password: admin123
-('Station Master Cairo', 'stationmaster@railconnect.com', '$2y$10$QvuHl77.Mmfy/dC0wO3xK.q43KFm7J9YOZaQ9FVmKLV7PENlX.L/e', 'station_master', 0.00),  -- Password: master123
-('John Smith', 'john@example.com', '$2y$10$ZZJZOmzYct6HfBmcHuPO9ucENH2FS4hyMi2KPgJ3z3EaLUJBtl2Xe', 'user', 5000.00),  -- Password: password123
-('Maria Garcia', 'maria@example.com', '$2y$10$ZZJZOmzYct6HfBmcHuPO9ucENH2FS4hyMi2KPgJ3z3EaLUJBtl2Xe', 'user', 3500.00);  -- Password: password123
+('Admin User', 'admin@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'admin', 0.00),  -- Password: 123
+('Station Master Cairo', 'stationmaster@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'station_master', 0.00),  -- Password: 123
+('User One', 'user@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'user', 1000.00),  -- Password: 123
+('User Two', 'user2@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'user', 50000.00);  -- Password: 123
 
 -- Insert stations
 INSERT INTO stations (name, location, description) VALUES
