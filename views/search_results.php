@@ -1,6 +1,5 @@
 <?php
-require_once '../paths.php';
-require_once BACKEND_PATH . 'search_results.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -15,10 +14,18 @@ require_once BACKEND_PATH . 'search_results.php';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="../public/assets/css/index.css">
 </head>
 <body>
-    <?php include(PARTIALS_PATH . 'navbar.php'); ?>
+    <nav>
+        <!-- Add navigation links here -->
+        <?php 
+                // Include header partial - add a forward slash
+                include_once PARTIALS_PATH . 'header.php';
+                ?>
+
+    </nav>
+        <!-- Navigation Bar -->
 
     <!-- Search Results Section -->
     <div class="container my-5">
@@ -199,9 +206,6 @@ require_once BACKEND_PATH . 'search_results.php';
         <?php endif; ?>
     </div>
 
-    <!-- Footer and Search Modal (include as before) -->
-    <!-- ... -->
-    <?php include(PARTIALS_PATH . 'search_train_modal.php'); ?>
 
 </body>
 </html>

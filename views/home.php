@@ -17,75 +17,14 @@
     <link rel="stylesheet" href="../public/assets/css/index.css">
 </head>
 <body>
-    <!-- Back to top button -->
-    <a href="#" class="back-to-top" id="backToTop">
-        <i class="bi bi-arrow-up"></i>
-    </a>
+
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand text-primary" href="#">
-                <i class="bi bi-train-front-fill me-2"></i>RailConnect
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="time-tracking.html">Train Tracking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="schedule.html">Schedules</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                <div class="d-flex gap-2">
-                    <?php 
-                        if (!isset($_SESSION['user_id'])) {
-                            echo '
-                                <button class="btn btn-outline-primary btn-auth" onclick="navigateTo(\'login\')">Log In</button>
-                                <button class="btn btn-primary btn-auth" onclick="navigateTo(\'signup\')">Sign Up</button>
-                                <script>
-                                function navigateTo(action) {
-                                    window.location.href = "index.php?action=" + action;
-                                }
-                                </script>
-                            ';
-                        } else {
+    <?php 
+    // Include header partial - add a forward slash
+    include_once PARTIALS_PATH . 'header.php';
+    ?>
 
-                            $firstLetter = substr($_SESSION['name'], 0, 1);
-                            
-                            echo '
-                                <div class="dropdown">
-                                    <div class="user-account dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <div class="user-avatar">' . $firstLetter . '</div>
-                                        <div class="user-info">
-                                            <span class="user-name">' . $_SESSION['name'] . '</span>
-                                            <span class="user-balance">₹' . number_format($_SESSION['balance'], 2) . '</span>
-                                        </div>
-                                    </div>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                        <li><a class="dropdown-item" href="index.php?action=profile"><i class="bi bi-person me-2"></i>My Profile</a></li>
-                                        <li><a class="dropdown-item" href="index.php?action=my_bookings"><i class="bi bi-ticket-perforated me-2"></i>My Bookings</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="'.BASE_URL.'?action=logout" "><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                                    </ul>
-                                </div>
-
-                            ';
-                        }
-                    ?>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- Hero Section -->
     <section class="hero-section text-center">
@@ -208,7 +147,7 @@
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="#"><i class="bi bi-house-door me-2"></i>Home</a></li>
-                        <li><a href="live_train_tracking.php"><i class="bi bi-clock me-2"></i>Train Tracking</a></li>
+                        <li><a href="time-tracking.html"><i class="bi bi-clock me-2"></i>Train Tracking</a></li>
                         <li><a href="schedule.html"><i class="bi bi-calendar me-2"></i>Schedules</a></li>
                         <li><a href="contact.html"><i class="bi bi-chat me-2"></i>Contact Us</a></li>
                     </ul>
@@ -252,116 +191,8 @@
     </footer>
 
     <!-- Search Modal -->
-    <div class="modal fade" id="searchTicketsModal" tabindex="-1" aria-labelledby="searchTicketsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="searchTicketsModalLabel">Find Your Train</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body"> 
-                    <form action="<?php echo BASE_URL; ?>?action=search_trains" method="POST">
-                        
-                        <!-- Trip Type -->
-                        <div class="mb-4">
-                            <label class="form-label">Trip Type</label>
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tripType" id="oneWay" value="oneWay" checked
-                                        aria-labelledby="oneWayLabel">
-                                    <label class="form-check-label" id="oneWayLabel" for="oneWay">
-                                        One Way
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="tripType" id="roundTrip" value="roundTrip"
-                                        aria-labelledby="roundTripLabel">
-                                    <label class="form-check-label" id="roundTripLabel" for="roundTrip">
-                                        Round Trip
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Class Selection -->
-                        <div class="mb-4">
-                            <label class="form-label">Travel Class</label>
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="travelClass" id="firstClass" value="first"
-                                        aria-labelledby="firstClassLabel">
-                                    <label class="form-check-label" id="firstClassLabel" for="firstClass">
-                                        First Class
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="travelClass" id="secondClass" value="second" checked
-                                        aria-labelledby="secondClassLabel">
-                                    <label class="form-check-label" id="secondClassLabel" for="secondClass">
-                                        Second Class
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Stations -->
-                        <div class="row mb-3 align-items-end">
-                            <div class="col">
-                                <label for="departureStation" class="form-label">Departure</label>
-                                <select class="form-select" name="departureStation" id="departureStation" required>
-                                    <option value="">Select station</option>
-                                    <?php foreach ($stations as $station): ?>
-                                        <option value="<?php echo htmlspecialchars($station['name']); ?>"><?php echo htmlspecialchars($station['name']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            
-                            <div class="col-auto px-0">
-                                <button type="button" class="btn btn-light swap-btn" id="swapStations">
-                                    <i class="bi bi-arrow-left-right"></i>
-                                </button>
-                            </div>
-                            
-                            <div class="col">
-                                <label for="arrivalStation" class="form-label">Arrival</label>
-                                <select class="form-select" name="arrivalStation" id="arrivalStation" required>
-                                    <option value="">Select station</option>
-                                    <?php foreach ($stations as $station): ?>
-                                        <option value="<?php echo htmlspecialchars($station['name']); ?>"><?php echo htmlspecialchars($station['name']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>  
-                        
-                        <!-- Dates -->
-                        <div class="row" id="dateSelectors">
-                            <div class="col-md-6 mb-3">
-                                <label for="departureDate" class="form-label">Departure Date</label>
-                                <input type="date" class="form-control" name="departureDate" id="departureDate" 
-                                    min="<?php echo date('Y-m-d'); ?>" 
-                                    value="<?php echo date('Y-m-d'); ?>" 
-                                    required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3" id="returnDateGroup" style="display: none;">
-                                <label for="returnDate" class="form-label">Return Date</label>
-                                <input type="date" class="form-control" name="returnDate" id="returnDate">
-                            </div>
-                        </div>
-                        
-                        <div id="formErrors" class="alert alert-danger d-none mb-3"></div>
-                        
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg px-4" id="searchButton">
-                                <span class="submit-text">Search</span>
-                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php include(PARTIALS_PATH . 'search_train_modal.php'); ?>
+
 
     <!-- Bootstrap JS with Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

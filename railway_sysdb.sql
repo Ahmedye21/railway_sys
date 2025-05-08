@@ -10,8 +10,7 @@ CREATE TABLE users (
     role ENUM('user', 'admin', 'station_master') NOT NULL DEFAULT 'user',
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    is_deleted BOOLEAN DEFAULT FALSE
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Stations table
@@ -160,9 +159,13 @@ CREATE TABLE transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
+    transaction_type ENUM('Deposit', 'Withdrawal', 'Booking', 'Refund') NOT NULL,
+    reference_id INT,  -- Can be a booking_id or other reference
+    description TEXT,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    INDEX idx_user_id (user_id)
+    INDEX idx_user_id (user_id),
+    INDEX idx_transaction_type (transaction_type)
 );
 
 -- Notifications table
@@ -216,10 +219,10 @@ CREATE TABLE seat_inventory (
 
 -- Insert sample users
 INSERT INTO users (name, email, password, role, balance) VALUES
-('Admin User', 'admin@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'admin', 0.00),  -- Password: 123
-('Station Master Cairo', 'stationmaster@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'station_master', 0.00),  -- Password: 123
-('User One', 'user@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'user', 1000.00),  -- Password: 123
-('User Two', 'user2@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'user', 50000.00);  -- Password: 123
+('Admin User', 'admin@railconnect.com', '$2y$10$FMiMxoN8kw8qO8hh1H9AfuIKYdly9vY6FqMB3FzMC7xUBhCH9Irja', 'admin', 0.00),  -- Password: admin123
+('Station Master Cairo', 'stationmaster@railconnect.com', '$2y$10$QvuHl77.Mmfy/dC0wO3xK.q43KFm7J9YOZaQ9FVmKLV7PENlX.L/e', 'station_master', 0.00),  -- Password: master123
+('John Smith', 'john@example.com', '$2y$10$ZZJZOmzYct6HfBmcHuPO9ucENH2FS4hyMi2KPgJ3z3EaLUJBtl2Xe', 'user', 5000.00),  -- Password: password123
+('Maria Garcia', 'maria@example.com', '$2y$10$ZZJZOmzYct6HfBmcHuPO9ucENH2FS4hyMi2KPgJ3z3EaLUJBtl2Xe', 'user', 3500.00);  -- Password: password123
 
 -- Insert stations
 INSERT INTO stations (name, location, description) VALUES
@@ -380,10 +383,12 @@ INSERT INTO bookings (user_id, train_id, schedule_id, from_station_id, to_statio
 (4, 3, 8, 6, 10, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 'first', 1, 1120.00, 'Confirmed', 'PNR18745623');
 
 -- Insert some sample transactions
-INSERT INTO transactions (user_id, amount) VALUES
-(3, 5000.00),
-(3, 480.00),
-(4, 3500.00);
+INSERT INTO transactions (user_id, amount, transaction_type, reference_id, description) VALUES
+(3, 5000.00, 'Deposit', NULL, 'Initial account deposit'),
+(3, -480.00, 'Booking', 1, 'Booking PNR18745621'),
+(3, -560.00, 'Booking', 2, 'Booking PNR18745622'),
+(4, 3500.00, 'Deposit', NULL, 'Initial account deposit'),
+(4, -1120.00, 'Booking', 3, 'Booking PNR18745623');
 
 -- Insert some sample notifications
 INSERT INTO notifications (user_id, title, message) VALUES
@@ -394,4 +399,4 @@ INSERT INTO notifications (user_id, title, message) VALUES
 
 -- Insert delay log with computed delay_minutes
 INSERT INTO delay_logs (train_id, schedule_id, station_id, scheduled_time, actual_time, reason, reported_by) VALUES
-(2, 4, 3, DATE_ADD(CURDATE(), INTERVAL '10:30' HOUR_MINUTE), DATE_ADD(CURDATE(), INTERVAL '10:45' HOUR_MINUTE), 'Signal failure at Matruh station', 2);
+(2, 4, 3, DATE_ADD(CURDATE(), INTERVAL 10 HOUR + 30 MINUTE), DATE_ADD(CURDATE(), INTERVAL 10 HOUR + 45 MINUTE), 'Signal failure at Matruh station', 2);
