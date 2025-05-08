@@ -29,7 +29,7 @@ class AuthController {
             if($this->user->authenticate()) {
                 $_SESSION['user_id']    = $this->user->id;
                 $_SESSION['name']       = $this->user->name;
-                $_SESSION['role']  = $this->user->role;
+                $_SESSION['role']       = $this->user->role;
                 $_SESSION['balance']    = $this->user->balance;
                 
                 $this->redirectBasedOnUserType($this->user->role);
@@ -112,10 +112,9 @@ class AuthController {
         if ($role == 'admin') {
             header("Location: index.php?action=admin_dashboard");
         } 
-        if( $role == 'station_master') {
+        else if( $role == 'station_master') {
             header("Location: index.php?action=station_master_dashboard");
-        }
-        else {
+        } else {
             header("Location: index.php");
         }
         exit;
