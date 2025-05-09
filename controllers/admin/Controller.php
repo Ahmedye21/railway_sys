@@ -113,6 +113,57 @@ class AdminDashboardController {
         }
     }
 
+    public function adminAddUser() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userData = [
+                'name' => $_POST['name'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'password' => $_POST['password'] ?? '',
+                'role' => $_POST['role'] ?? 'user',
+                'balance' => $_POST['balance'] ?? 0.00
+            ];
+
+            if (empty($userData['name']) || empty($userData['email']) || empty($userData['password']) || empty($userData['role'])) {
+                $_SESSION['error'] = "All fields (Name, Email, Password, Role) are required.";
+            } else if ($this->userModel->createUser($userData)) {
+                $_SESSION['message'] = "User added successfully.";
+            } else {
+                $_SESSION['error'] = "Failed to add user. Email might already exist.";
+            }
+        } else {
+            $_SESSION['error'] = "Invalid request method.";
+        }
+        header("Location: index.php?action=manage_users");
+        exit;
+    }
+
+    public function adminEditUser() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userData = [
+                'id' => $_POST['user_id'] ?? 0,
+                'name' => $_POST['name'] ?? '',
+                'email' => $_POST['email'] ?? '',
+                'role' => $_POST['role'] ?? 'user',
+                'balance' => $_POST['balance'] ?? 0.00
+            ];
+            $newPassword = $_POST['password'] ?? null;
+
+            if (empty($userData['id']) || empty($userData['name']) || empty($userData['email']) || empty($userData['role'])) {
+                $_SESSION['error'] = "User ID, Name, Email, and Role are required.";
+            } else {
+                if ($this->userModel->updateUser($userData, !empty($newPassword) ? $newPassword : null)) {
+                    $_SESSION['message'] = "User updated successfully.";
+                } else {
+                    $_SESSION['error'] = "Failed to update user.";
+                }
+            }
+        } else {
+            $_SESSION['error'] = "Invalid request method.";
+        }
+        header("Location: index.php?action=manage_users");
+        exit;
+    }
+
 
 }
 

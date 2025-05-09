@@ -103,8 +103,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="admin_users.php" method="POST">
-                        <input type="hidden" name="action" value="add_user">
+                    <form action="index.php?action=admin_add_user" method="POST">
                         
                         <div class="mb-3">
                             <label class="form-label">Name</label>
@@ -154,8 +153,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="admin_users.php" method="POST">
-                        <input type="hidden" name="action" value="edit_user">
+                    <form action="index.php?action=admin_edit_user" method="POST">
                         <input type="hidden" name="user_id" id="editUserId">
                         
                         <div class="mb-3">

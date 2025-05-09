@@ -159,7 +159,87 @@ class User {
         $stmt->execute();
         return $stmt->rowCount() > 0;
     }
+    
+    public function createUser($userData) {
+        try {
+            if ($this->emailExists($userData['email'])) {
+                error_log("Attempt to create user with existing email: " . $userData['email']);
+                return false;
+            }
 
+            $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
+            
+            $query = "INSERT INTO users SET 
+                    name = :name, 
+                    email = :email, 
+                    password = :password, 
+                    role = :role,
+                    balance = :balance";
+    
+            $stmt = $this->conn->prepare($query);
+            
+            $stmt->bindParam(":name", $userData['name']);
+            $stmt->bindParam(":email", $userData['email']);
+            $stmt->bindParam(":password", $hashedPassword);
+            $stmt->bindParam(":role", $userData['role']);
+            $stmt->bindParam(":balance", $userData['balance']);
+            
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error creating user: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function updateUser($userData, $newPassword = null) {
+        try {
+            // Check if email is being changed and if the new email already exists for another user
+            $currentUserDataStmt = $this->conn->prepare("SELECT email FROM users WHERE id = :id");
+            $currentUserDataStmt->bindParam(":id", $userData['id']);
+            $currentUserDataStmt->execute();
+            $currentUser = $currentUserDataStmt->fetch(PDO::FETCH_ASSOC);
 
+            if ($currentUser && $currentUser['email'] !== $userData['email']) {
+                if ($this->emailExists($userData['email'], $userData['id'])) {
+                    error_log("Attempt to update user (ID: {$userData['id']}) with existing email: " . $userData['email']);
+                    return false; // New email already exists for another user
+                }
+            }
+            
+            if ($newPassword) {
+                $query = "UPDATE users SET 
+                        name = :name, 
+                        email = :email, 
+                        password = :password, 
+                        role = :role,
+                        balance = :balance
+                        WHERE id = :id";
+                        
+                $stmt = $this->conn->prepare($query);
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $stmt->bindParam(":password", $hashedPassword);
+            } else {
+                $query = "UPDATE users SET 
+                        name = :name, 
+                        email = :email, 
+                        role = :role,
+                        balance = :balance
+                        WHERE id = :id";
+                        
+                $stmt = $this->conn->prepare($query);
+            }
+            
+            $stmt->bindParam(":name", $userData['name']);
+            $stmt->bindParam(":email", $userData['email']);
+            $stmt->bindParam(":role", $userData['role']);
+            $stmt->bindParam(":balance", $userData['balance']);
+            $stmt->bindParam(":id", $userData['id']);
+            
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error updating user: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

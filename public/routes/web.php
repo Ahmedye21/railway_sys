@@ -102,11 +102,31 @@ switch ($action) {
         require_once CONTROLLERS_PATH . '/admin/Controller.php';
         (new AdminDashboardController())->manageUsers();
         break;
+    
+    case 'admin_add_user':
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        require_once CONTROLLERS_PATH . '/admin/Controller.php';
+        (new AdminDashboardController())->adminAddUser();
+        break;
+
+    case 'admin_edit_user':
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        require_once CONTROLLERS_PATH . '/admin/Controller.php';
+        (new AdminDashboardController())->adminEditUser();
+        break;
 
     case 'manage_trains':
         require_once CONTROLLERS_PATH . '/admin/Controller.php';
         (new AdminDashboardController())->manageTrains();
         break;
+    
+        
 
     // You can uncomment these as you implement them
     /*
