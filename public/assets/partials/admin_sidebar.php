@@ -1,5 +1,36 @@
 <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
     <div class="position-sticky">
+        <style>
+            /* Custom sidebar styling */
+            #sidebar {
+                position: fixed;
+                height: 100vh;
+                z-index: 100;
+                width: 250px; /* Fixed width */
+                transition: all 0.3s;
+            }
+            
+            /* Adjust main content area to make room for sidebar */
+            @media (min-width: 768px) {
+                .main-content {
+                    margin-left: 250px;
+                    width: calc(100% - 250px);
+                }
+            }
+            
+            /* For mobile view */
+            @media (max-width: 767.98px) {
+                #sidebar {
+                    width: 100%;
+                    position: relative;
+                    height: auto;
+                }
+                .main-content {
+                    margin-left: 0;
+                    width: 100%;
+                }
+            }
+        </style>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'admin_dashboard.php' ? 'active' : ''; ?>" href="<?php echo BASE_URL; ?>/index.php?action=admin_dashboard">

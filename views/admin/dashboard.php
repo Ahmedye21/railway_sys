@@ -160,7 +160,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
             include_once PARTIALS_PATH . 'admin_sidebar.php';
             ?>                  
             <!-- Main Content -->
-            <div class="col-lg-10 p-4 admin-content">
+            <div class="col-lg-10 p-4 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h2 class="mb-0">Admin Dashboard</h2>

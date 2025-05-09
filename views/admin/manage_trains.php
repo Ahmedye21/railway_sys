@@ -32,7 +32,7 @@ $routes = $routes ?? [];
             // Include header partial - add a forward slash
             include_once PARTIALS_PATH . 'admin_sidebar.php';
             ?>
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <main class="main-content col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
                 <h1 class="h2 mb-4">Manage Trains</h1>
 
 
