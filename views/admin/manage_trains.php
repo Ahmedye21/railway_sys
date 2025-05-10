@@ -135,7 +135,7 @@ $routes = $routes ?? [];
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="admin_trains.php" method="POST">
+                    <form action="index.php?action=admin_add_train" method="POST">
                         <input type="hidden" name="action" value="add_train">
                         
                         <div class="mb-3">
@@ -206,7 +206,7 @@ $routes = $routes ?? [];
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="admin_trains.php" method="POST">
+                    <form action="index.php?action=admin_edit_train" method="POST">
                         <input type="hidden" name="action" value="edit_train">
                         <input type="hidden" name="train_id" id="editTrainId">
                         

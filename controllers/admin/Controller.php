@@ -164,6 +164,33 @@ class AdminDashboardController {
         exit;
     }
 
+    public function adminAddTrain() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $trainData = [
+                'train_number' => $_POST['train_number'] ?? '',
+                'name' => $_POST['name'] ?? '',
+                'route_id' => $_POST['route_id'] ?? '',
+                'total_first_class_seats' => $_POST['first_class_seats'] ?? '',
+                'total_second_class_seats' => $_POST['second_class_seats'] ?? '',
+                'has_wifi' => isset($_POST['has_wifi']) ? 1 : 0,
+                'has_food' => isset($_POST['has_food']) ? 1 : 0,
+                'has_power_outlets' => isset($_POST['has_power_outlets']) ? 1 : 0
+            ];
+
+            if (empty($trainData['train_number']) || empty($trainData['name']) || empty($trainData['route_id']) || empty($trainData['total_first_class_seats']) || empty($trainData['total_second_class_seats']))  {
+                $_SESSION['error'] = "All fields (Train number, Name, Route, First class seats and Second class seats) are required.";
+            } else if ($this->trainModel->createTrain($trainData)) {
+                $_SESSION['message'] = "Train added successfully.";
+            } else {
+                $_SESSION['error'] = "Failed to add train.";
+            }
+        } else {
+            $_SESSION['error'] = "Invalid request method.";
+        }
+        header("Location: index.php?action=manage_trains");
+        exit;
+    }
+
 
 }
 
