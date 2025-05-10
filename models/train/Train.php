@@ -131,8 +131,8 @@ class Train{
             $stmt->bindParam(":train_number", $trainData['train_number']);
             $stmt->bindParam(":name", $trainData['name']);
             $stmt->bindParam(":route_id", $trainData['route_id']);
-            $stmt->bindParam(":total_first_class_seats", $trainData['total_first_class_seats']);
-            $stmt->bindParam(":total_second_class_seats", $trainData['total_second_class_seats']);
+            $stmt->bindParam(":total_first_class_seats", $trainData['first_class_seats']);
+            $stmt->bindParam(":total_second_class_seats", $trainData['second_class_seats']);
             $stmt->bindParam(":has_wifi", $trainData['has_wifi']);
             $stmt->bindParam(":has_food", $trainData['has_food']);
             $stmt->bindParam(":has_power_outlets", $trainData['has_power_outlets']);
@@ -147,6 +147,35 @@ class Train{
         }
     }
 
+    public function editTrain($trainId, $trainData) {
+        try {
+            $query = "UPDATE trains SET 
+                    train_number = :train_number, 
+                    name = :name, 
+                    route_id = :route_id, 
+                    total_first_class_seats = :total_first_class_seats,
+                    total_second_class_seats = :total_second_class_seats,
+                    has_wifi = :has_wifi,
+                    has_food = :has_food,
+                    has_power_outlets = :has_power_outlets
+                    WHERE train_id = :train_id";
 
+            $stmt = $this->pdo->prepare($query);
+        
+            $stmt->bindParam(":train_number", $trainData['train_number']);
+            $stmt->bindParam(":name", $trainData['name']);
+            $stmt->bindParam(":route_id", $trainData['route_id']);
+            $stmt->bindParam(":total_first_class_seats", $trainData['first_class_seats']);
+            $stmt->bindParam(":total_second_class_seats", $trainData['second_class_seats']);
+            $stmt->bindParam(":has_wifi", $trainData['has_wifi']);
+            $stmt->bindParam(":has_food", $trainData['has_food']);
+            $stmt->bindParam(":has_power_outlets", $trainData['has_power_outlets']);
+            $stmt->bindParam(":train_id", $trainId);
 
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error updating train: " . $e->getMessage());
+            return false;
+        }
+    }
 }

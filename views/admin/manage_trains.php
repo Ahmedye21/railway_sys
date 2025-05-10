@@ -1,4 +1,3 @@
-
 <?php
 $message = $message ?? null;
 $error = $error ?? null;
@@ -207,7 +206,7 @@ $routes = $routes ?? [];
                 </div>
                 <div class="modal-body">
                     <form action="index.php?action=admin_edit_train" method="POST">
-                        <input type="hidden" name="action" value="edit_train">
+                        
                         <input type="hidden" name="train_id" id="editTrainId">
                         
                         <div class="mb-3">
@@ -272,16 +271,6 @@ $routes = $routes ?? [];
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Update train ID in status modal
-        document.getElementById('updateStatusModal').addEventListener('show.bs.modal', function(event) {
-            const button = event.relatedTarget;
-            const trainId = button.getAttribute('data-train-id');
-            const trainName = button.getAttribute('data-train-name');
-            
-            this.querySelector('#statusTrainId').value = trainId;
-            this.querySelector('.modal-title').textContent = `Update Status - ${trainName}`;
-        });
-
         // Add this to your existing script section
         document.getElementById('editTrainModal').addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;

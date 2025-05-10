@@ -134,7 +134,15 @@ switch ($action) {
         require_once CONTROLLERS_PATH . '/admin/Controller.php';
         (new AdminDashboardController())->adminAddTrain();
         break;
-    
+
+    case 'admin_edit_train':
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        require_once CONTROLLERS_PATH . '/admin/Controller.php';
+        (new AdminDashboardController())->adminEditTrain();
+        break;
         
 
     // You can uncomment these as you implement them
