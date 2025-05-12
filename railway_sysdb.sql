@@ -199,21 +199,6 @@ CREATE TABLE delay_logs (
     INDEX idx_schedule_id (schedule_id)
 );
 
--- Seat inventory table (to track available seats for each journey)
-CREATE TABLE seat_inventory (
-    inventory_id INT AUTO_INCREMENT PRIMARY KEY,
-    train_id INT NOT NULL,
-    schedule_id INT NOT NULL,
-    travel_date DATE NOT NULL,
-    first_class_available INT NOT NULL,
-    second_class_available INT NOT NULL,
-    FOREIGN KEY (train_id) REFERENCES trains(train_id),
-    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
-    UNIQUE KEY (train_id, schedule_id, travel_date),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
 -- Insert sample users
 INSERT INTO users (name, email, password, role, balance) VALUES
 ('Admin User', 'admin@railconnect.com', '$2y$10$FTq6EuLk3L92uH0dIOMP4.aHhFvKdrISI2TSMiQ5rT6mMM1R1r/aG', 'admin', 0.00),  -- Password: 123
@@ -360,12 +345,6 @@ INSERT INTO pricing (route_id, from_station_id, to_station_id, first_class_price
 (3, 7, 9, 560.00, 280.00),   -- October to Luxor
 (3, 7, 10, 880.00, 440.00),  -- October to Aswan
 (3, 9, 10, 320.00, 160.00);  -- Luxor to Aswan
-
--- Insert sample seat inventory
-INSERT INTO seat_inventory (train_id, schedule_id, travel_date, first_class_available, second_class_available) VALUES
-(1, 1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), 49, 150),  -- One first class seat booked
-(2, 4, DATE_ADD(CURDATE(), INTERVAL 5 DAY), 60, 178),  -- Two second class seats booked
-(3, 8, DATE_ADD(CURDATE(), INTERVAL 10 DAY), 79, 240); -- One first class seat booked
 
 -- Insert some sample train status updates
 INSERT INTO train_status (train_id, schedule_id, current_station_id, next_station_id, status, delay_minutes, expected_arrival) VALUES
