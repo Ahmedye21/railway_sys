@@ -136,7 +136,7 @@ CREATE TABLE bookings (
     schedule_id INT NOT NULL,
     from_station_id INT NOT NULL,
     to_station_id INT NOT NULL,
-    booking_date DATE NOT NULL,
+    booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     travel_date DATE NOT NULL,
     travel_class ENUM('first', 'second') NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
