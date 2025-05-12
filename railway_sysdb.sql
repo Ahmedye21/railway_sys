@@ -139,10 +139,8 @@ CREATE TABLE bookings (
     booking_date DATE NOT NULL,
     travel_date DATE NOT NULL,
     travel_class ENUM('first', 'second') NOT NULL,
-    ticket_count INT NOT NULL DEFAULT 1,
     total_amount DECIMAL(10, 2) NOT NULL,
     booking_status ENUM('Confirmed', 'Pending', 'Cancelled') DEFAULT 'Pending',
-    pnr_number VARCHAR(20) UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (train_id) REFERENCES trains(train_id),
     FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
@@ -160,7 +158,6 @@ CREATE TABLE transactions (
     user_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     transaction_type ENUM('Deposit', 'Withdrawal', 'Booking', 'Refund') NOT NULL,
-    reference_id INT,  -- Can be a booking_id or other reference
     description TEXT,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
