@@ -1,7 +1,7 @@
 <?php
 // controllers/station/Stations.php
 
-require_once MODELS_PATH . 'station/Stations.php';
+require_once MODELS_PATH . '/station/Stations.php';
 
 class StationsController {
     private $model;
@@ -29,8 +29,8 @@ class StationsController {
         
         // Get all stations for dropdown
         $allStations = $this->model->getAllStations();
-        
-        require_once VIEWS_PATH . '/station/arrivals.php';
+
+        require_once VIEWS_PATH . '/schedules.php';
     }
 
     /**
@@ -44,6 +44,8 @@ class StationsController {
         echo json_encode($results);
         exit;
     }
+
+    
 
     /**
      * Add new station (admin function)

@@ -58,7 +58,7 @@ class StationsController {
             
             if ($this->model->addStation($name, $code, $city)) {
                 $_SESSION['success'] = 'Station added successfully';
-                header('Location: ' . BASE_URL . '/index.php?action=admin_stations');
+                header('Location: ' . BASE_URL . '/index.php?action=manage_trains');
                 exit;
             } else {
                 $_SESSION['error'] = 'Failed to add station';
@@ -76,7 +76,7 @@ class StationsController {
         
         if (!$station) {
             $_SESSION['error'] = 'Station not found';
-            header('Location: ' . BASE_URL . '/index.php?action=admin_stations');
+            header('Location: ' . BASE_URL . '/index.php?action=manage_trains');
             exit;
         }
         
@@ -87,7 +87,7 @@ class StationsController {
             
             if ($this->model->updateStation($stationId, $name, $code, $city)) {
                 $_SESSION['success'] = 'Station updated successfully';
-                header('Location: ' . BASE_URL . '/index.php?action=admin_stations');
+                header('Location: ' . BASE_URL . '/index.php?action=manage_trains');
                 exit;
             } else {
                 $_SESSION['error'] = 'Failed to update station';
@@ -107,7 +107,7 @@ class StationsController {
             $_SESSION['error'] = 'Failed to delete station';
         }
         
-        header('Location: ' . BASE_URL . '/index.php?action=admin_stations');
+        header('Location: ' . BASE_URL . '/index.php?action=manage_trains');
         exit;
     }
 }

@@ -70,21 +70,7 @@
                         </div>
                     </form>
                     
-                    <!-- Recent Searches -->
-                    <div class="search-history d-none" id="recentSearches">
-                        <h6 class="mb-3">Recent Searches:</h6>
-                        <div class="d-flex flex-wrap gap-2">
-                            <div class="recent-search-item">
-                                <i class="bi bi-clock-history me-2"></i> 12565 - Bihar Sampark Kranti
-                            </div>
-                            <div class="recent-search-item">
-                                <i class="bi bi-clock-history me-2"></i> 12301 - Howrah Rajdhani
-                            </div>
-                            <div class="recent-search-item">
-                                <i class="bi bi-clock-history me-2"></i> 22691 - Rajdhani Express
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 
                 <!-- Results Section (Initially Hidden) -->
@@ -228,365 +214,318 @@
 
     <!-- Bootstrap JS with Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
+<script>
+    // Handle form submission
+    document.getElementById('trainTrackingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
-        // Handle form submission
-        document.getElementById('trainTrackingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Get input values
+        const searchType = document.querySelector('input[name="searchType"]:checked').value;
+        const searchValue = document.getElementById('trainInput').value.trim();
+        
+        if (searchValue === '') {
+            alert('Please enter a train number or name');
+            return;
+        }
+        
+        // Show loading state
+        const trackButton = document.getElementById('trackButton');
+        trackButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Tracking...';
+        trackButton.disabled = true;
+        
+        // Make AJAX call to controller
+        fetch('<?php echo BASE_URL; ?>/index.php?action=get_train_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `searchType=${encodeURIComponent(searchType)}&searchValue=${encodeURIComponent(searchValue)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Reset button state
+            trackButton.innerHTML = '<i class="bi bi-search me-1"></i> Track';
+            trackButton.disabled = false;
             
-            // Get input values
-            const searchType = document.querySelector('input[name="searchType"]:checked').value;
-            const trainInput = document.getElementById('trainInput').value.trim();
-            
-            if (trainInput === '') {
-                alert('Please enter a train number or name');
+            if (data.error) {
+                alert(data.error);
                 return;
             }
             
-            // Show results section (in a real application, this would be after data fetch)
-            document.getElementById('trainStatusSection').classList.remove('d-none');
+            updateTrainUI(data);
             
-            // Show recent searches
+            document.getElementById('trainStatusSection').classList.remove('d-none');
             document.getElementById('recentSearches').classList.remove('d-none');
             
-            // Simulate data loading (would be replaced with real API call)
-            const trackButton = document.getElementById('trackButton');
-            trackButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Tracking...';
-            trackButton.disabled = true;
-            
-            setTimeout(() => {
-                trackButton.innerHTML = '<i class="bi bi-search me-1"></i> Track';
-                trackButton.disabled = false;
-                
-                // Scroll to results
-                document.getElementById('trainStatusSection').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-                // In a real application, you would update the UI with fetched data here
-                updateTrainData(trainInput, searchType);
-                
-            }, 1500);
-        });
-        
-        // Simulated data update function
-        function updateTrainData(trainInput, searchType) {
-            // This is a mock function that would be replaced with real data in production
-            
-            // For demo purposes, we're setting static data
-            // In a real application, this data would come from your API
-            
-            // Parse input to determine if it's Rajdhani or something else
-            let isRajdhani = trainInput.toLowerCase().includes('rajdhani');
-            let trainData;
-            
-            if (isRajdhani) {
-                trainData = {
-                    number: '12301',
-                    name: 'Howrah Rajdhani Express',
-                    route: 'New Delhi to Howrah',
-                    status: 'on-time',
-                    currentLocation: 'Patna Junction',
-                    nextStation: 'Dhanbad Junction',
-                    expectedArrival: '11:45 AM (in 35 mins)',
-                    lastUpdated: 'Today, 10:35 AM'
-                };
-            } else {
-                trainData = {
-                    number: trainInput.length <= 5 ? trainInput : '12565',
-                    name: trainInput.length > 5 ? trainInput : 'Bihar Sampark Kranti',
-                    route: 'New Delhi to Darbhanga',
-                    status: 'delayed',
-                    currentLocation: 'Lucknow Junction',
-                    nextStation: 'Gorakhpur Junction',
-                    expectedArrival: '1:15 PM (delayed by 25 mins)',
-                    lastUpdated: 'Today, 10:40 AM'
-                };
-            }
-            
-            // Update UI elements
-            document.getElementById('trainName').textContent = trainData.number + ' - ' + trainData.name;
-            document.getElementById('trainRoute').textContent = trainData.route;
-            document.getElementById('currentLocation').textContent = trainData.currentLocation;
-            document.getElementById('nextStation').textContent = trainData.nextStation;
-            document.getElementById('expectedArrival').textContent = trainData.expectedArrival;
-            document.getElementById('lastUpdated').textContent = trainData.lastUpdated;
-            
-            // Update status badge
-            const statusBadge = document.getElementById('trainStatusBadge');
-            if (trainData.status === 'on-time') {
-                statusBadge.className = 'train-status-badge train-status-ontime';
-                statusBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> On Time';
-            } else {
-                statusBadge.className = 'train-status-badge train-status-delayed';
-                statusBadge.innerHTML = '<i class="bi bi-exclamation-triangle-fill me-1"></i> Delayed';
-            }
-            
-            // In a real application, you would also update the journey progress and map view
-        }
-        
-        // Handle refresh button click
-        document.getElementById('refreshButton').addEventListener('click', function() {
-            const trainInput = document.getElementById('trainInput').value.trim();
-            const searchType = document.querySelector('input[name="searchType"]:checked').value;
-            
-            // Show loading indicator
-            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Refreshing...';
-            this.disabled = true;
-            
-            // Simulate refresh (would be replaced with real API call)
-            setTimeout(() => {
-                this.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh Status';
-                this.disabled = false;
-                
-                // Update data
-                updateTrainData(trainInput, searchType);
-                
-                // Show toast or notification
-                alert('Train status updated successfully!');
-            }, 1000);
-        });
-        
-        // Handle share button click
-        document.getElementById('shareButton').addEventListener('click', function() {
-            // In a real application, this would open a share dialog or copy a link
-            alert('Share functionality would be implemented here.');
-        });
-        
-        // Handle recent search clicks
-        document.querySelectorAll('.recent-search-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const searchText = this.textContent.trim().replace('Recent: ', '');
-                document.getElementById('trainInput').value = searchText;
-                
-                // Trigger form submission
-                document.querySelector('#trainTrackingForm button[type="submit"]').click();
+            document.getElementById('trainStatusSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            trackButton.innerHTML = '<i class="bi bi-search me-1"></i> Track';
+            trackButton.disabled = false;
         });
+    });
+
+    function updateTrainUI(data) {
+        document.getElementById('trainName').textContent = `${data.trainInfo.train_number} - ${data.trainInfo.name}`;
+        document.getElementById('trainRoute').textContent = data.trainInfo.route;
         
-        function navigateTo(action) {
-            window.location.href = "index.php?action=" + action;
-        }
-    </script>
-    <style>
-        /* Additional Styles for Train Tracking Page */
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
+        const statusBadge = document.getElementById('trainStatusBadge');
+        statusBadge.className = `train-status-badge train-status-${data.trainStatus.status.toLowerCase().replace(' ', '')}`;
+        statusBadge.innerHTML = `<i class="bi ${data.trainStatus.status === 'On Time' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill'} me-1"></i> ${data.trainStatus.status}`;
         
-        .hero-section {
-            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 50px;
-        }
+        document.getElementById('currentLocation').textContent = data.trainStatus.current_station;
+        document.getElementById('nextStation').textContent = data.trainStatus.next_station;
+        document.getElementById('expectedArrival').textContent = data.trainStatus.expected_arrival_formatted || 'N/A';
+        document.getElementById('lastUpdated').textContent = data.trainStatus.last_updated_formatted || 'N/A';
         
+        const progressTrack = document.querySelector('.progress-track');
+        progressTrack.innerHTML = '';
+        
+        data.journeyProgress.forEach(station => {
+            const stationItem = document.createElement('div');
+            stationItem.className = 'station-item';
+            
+            stationItem.innerHTML = `
+                <div class="station-marker ${station.status}"></div>
+                <div class="station-content">
+                    <div class="station-name">${station.name}</div>
+                    <div class="station-time">${station.time}</div>
+                </div>
+            `;
+            
+            progressTrack.appendChild(stationItem);
+        });
+    }
+
+    document.getElementById('refreshButton').addEventListener('click', function() {
+        document.getElementById('trainTrackingForm').dispatchEvent(new Event('submit'));
+    });
+    
+    document.getElementById('shareButton').addEventListener('click', function() {
+        alert('Share functionality would be implemented here.');
+    });
+    
+    document.querySelectorAll('.recent-search-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const searchText = this.textContent.trim().replace('Recent: ', '');
+            document.getElementById('trainInput').value = searchText;
+            document.getElementById('trainTrackingForm').dispatchEvent(new Event('submit'));
+        });
+    });
+</script>
+
+<style>
+        /* Train Tracking CSS */
+    .tracking-form {
+        background-color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .tracking-heading {
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .recent-search-item {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .recent-search-item:hover {
+        background-color: #e9ecef;
+    }
+
+    .search-history {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .train-info-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        margin-bottom: 2rem;
+    }
+
+    .train-info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .train-icon {
+        font-size: 2rem;
+        color: #0d6efd;
+        margin-right: 1rem;
+    }
+
+    .train-details {
+        flex-grow: 1;
+    }
+
+    .train-status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .train-status-ontime {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .train-status-delayed {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .train-status-cancelled {
+        background-color: #f8d7da;
+        color: #842029;
+    }
+
+    .train-status-arrived {
+        background-color: #cfe2ff;
+        color: #084298;
+    }
+
+    .train-status-unknown {
+        background-color: #e2e3e5;
+        color: #41464b;
+    }
+
+    .progress-track {
+        position: relative;
+        padding-left: 1rem;
+    }
+
+    .progress-track::before {
+        content: '';
+        position: absolute;
+        left: 0.6rem;
+        top: 0;
+        height: 100%;
+        width: 2px;
+        background-color: #dee2e6;
+        transform: translateX(-50%);
+    }
+
+    .station-item {
+        display: flex;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .station-marker {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background-color: #dee2e6;
+        margin-right: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .station-marker.passed {
+        background-color: #0d6efd;
+    }
+
+    .station-marker.active {
+        background-color: #198754;
+        box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+    }
+
+    .station-content {
+        flex-grow: 1;
+    }
+
+    .station-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .station-time {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .map-container {
+        height: 300px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .map-placeholder {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+
+    .amenity-badge {
+        background-color: #e9ecef;
+        border-radius: 50px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .train-amenities {
+        border-top: 1px solid #e9ecef;
+        padding-top: 1rem;
+    }
+
+    .copy-notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 4px;
+        font-size: 14px;
+        z-index: 9999;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .copy-notification.show {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
         .tracking-form {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-top: -30px;
-        }
-        
-        .tracking-heading {
-            color: #182848;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        
-        .train-status {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 30px;
-            margin-top: 40px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .progress-track {
-            margin: 30px 0;
-            position: relative;
-        }
-        
-        .station-item {
-            position: relative;
-            padding-bottom: 50px;
-        }
-        
-        .station-item:last-child {
-            padding-bottom: 0;
-        }
-        
-        .station-marker {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            border: 3px solid #dee2e6;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-        
-        .station-marker.active {
-            background-color: #198754;
-            border-color: #12633a;
-        }
-        
-        .station-marker.passed {
-            background-color: #0d6efd;
-            border-color: #0a58ca;
-        }
-        
-        .station-content {
-            margin-left: 35px;
-            position: relative;
-        }
-        
-        .station-content::before {
-            content: '';
-            position: absolute;
-            left: -26px;
-            top: 20px;
-            height: calc(100% - 15px);
-            width: 2px;
-            background-color: #dee2e6;
-        }
-        
-        .station-item:last-child .station-content::before {
-            display: none;
-        }
-        
-        .station-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .station-time {
-            color: #6c757d;
-            font-size: 0.85rem;
-        }
-        
-        .train-info-card {
-            border-left: 5px solid #0d6efd;
-            margin-bottom: 20px;
+            padding: 1.5rem;
         }
         
         .train-info-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+            flex-direction: column;
+            align-items: flex-start;
         }
         
         .train-icon {
-            font-size: 2rem;
-            color: #0d6efd;
-            margin-right: 15px;
+            margin-bottom: 1rem;
         }
-        
-        .train-details h5 {
-            margin-bottom: 0;
-            color: #0d6efd;
-        }
-        
-        .train-status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-top: 10px;
-        }
-        
-        .train-status-ontime {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-        
-        .train-status-delayed {
-            background-color: #fff3cd;
-            color: #664d03;
-        }
-        
-        .search-history {
-            margin-top: 30px;
-        }
-        
-        .recent-search-item {
-            padding: 10px 15px;
-            border-radius: 5px;
-            background-color: #f8f9fa;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .recent-search-item:hover {
-            background-color: #e9ecef;
-        }
-        
-        .map-container {
-            height: 300px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            margin-top: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .map-placeholder {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(45deg, #e9ecef 25%, #f8f9fa 25%, #f8f9fa 50%, #e9ecef 50%, #e9ecef 75%, #f8f9fa 75%, #f8f9fa 100%);
-            background-size: 20px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6c757d;
-        }
-        
-        footer {
-            background-color: #182848;
-            color: #f8f9fa;
-            padding: 50px 0 20px;
-            margin-top: 70px;
-        }
-        
-        footer a {
-            color: #f8f9fa;
-            text-decoration: none;
-        }
-        
-        footer a:hover {
-            color: #0d6efd;
-        }
-        
-        .footer-brand {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .social-icons {
-            margin-top: 20px;
-        }
-        
-        .social-icons a {
-            display: inline-block;
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
-        
-        footer h5 {
-            color: white;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        
-        footer ul li {
-            margin-bottom: 10px;
-        }
-    </style>
+    }
+</style>
 
 
 </body>

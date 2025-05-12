@@ -128,29 +128,30 @@ class StationModel {
     public function getTrainsByStation($stationId) {
         try {
             $sql = "SELECT 
-                        t.train_id,
-                        t.train_number,
-                        t.name AS train_name,
-                        o.name AS origin,
-                        d.name AS destination,
-                        sd.arrival_time AS scheduled_arrival,
-                        sd.estimated_arrival,
-                        sd.status,
-                        sd.platform
-                    FROM schedule_details sd
-                    JOIN schedules s ON sd.schedule_id = s.schedule_id
-                    JOIN trains t ON s.train_id = t.train_id
-                    JOIN route_stations rs_o ON t.route_id = rs_o.route_id AND rs_o.sequence_number = 1
-                    JOIN stations o ON rs_o.station_id = o.station_id
-                    JOIN route_stations rs_d ON t.route_id = rs_d.route_id
-                    JOIN stations d ON rs_d.station_id = d.station_id
-                    WHERE sd.station_id = :stationId
-                    AND rs_d.sequence_number = (
-                        SELECT MAX(sequence_number) 
-                        FROM route_stations 
-                        WHERE route_id = t.route_id
-                    )
-                    ORDER BY sd.arrival_time";
+                    t.train_id,
+                    t.train_number,
+                    t.name AS train_name,
+                    o.name AS origin,
+                    d.name AS destination,
+                    sd.arrival_time AS scheduled_arrival,
+                    ts.status,
+                    ts.delay_minutes,
+                    ts.expected_arrival AS estimated_arrival
+                FROM schedule_details sd
+                JOIN schedules s ON sd.schedule_id = s.schedule_id
+                JOIN trains t ON s.train_id = t.train_id
+                JOIN route_stations rs_o ON t.route_id = rs_o.route_id AND rs_o.sequence_number = 1
+                JOIN stations o ON rs_o.station_id = o.station_id
+                JOIN route_stations rs_d ON t.route_id = rs_d.route_id
+                JOIN stations d ON rs_d.station_id = d.station_id
+                LEFT JOIN train_status ts ON t.train_id = ts.train_id AND s.schedule_id = ts.schedule_id
+                WHERE sd.station_id = :stationId
+                AND rs_d.sequence_number = (
+                    SELECT MAX(sequence_number) 
+                    FROM route_stations 
+                    WHERE route_id = t.route_id
+                )
+                ORDER BY sd.arrival_time";
                     
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([':stationId' => $stationId]);

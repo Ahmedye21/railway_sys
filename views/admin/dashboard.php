@@ -225,153 +225,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                     </div>
                 </div>
                 
-                <!-- Recent Bookings and Charts -->
-                <div class="row g-4 mb-4">
-                    <div class="col-lg-8">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Recent Bookings</h5>
-                                <button class="btn btn-sm btn-primary">View All</button>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Booking ID</th>
-                                                <th>User</th>
-                                                <th>Train</th>
-                                                <th>Route</th>
-                                                <th>Date</th>
-                                                <th>Status</th>
-                                                <th>Amount</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>#BK78965</td>
-                                                <td>Raj Kumar</td>
-                                                <td>Rajdhani Express</td>
-                                                <td>Delhi → Mumbai</td>
-                                                <td>20 Jun 2025</td>
-                                                <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>EGP1,450</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownAction1">
-                                                            <li><a class="dropdown-item" href="#">View Details</a></li>
-                                                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                            <li><a class="dropdown-item text-danger" href="#">Cancel</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#BK78964</td>
-                                                <td>Priya Sharma</td>
-                                                <td>Shatabdi Express</td>
-                                                <td>Bangalore → Chennai</td>
-                                                <td>21 Jun 2025</td>
-                                                <td><span class="badge bg-warning text-dark">Pending</span></td>
-                                                <td>EGP850</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction2" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownAction2">
-                                                            <li><a class="dropdown-item" href="#">View Details</a></li>
-                                                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                            <li><a class="dropdown-item text-danger" href="#">Cancel</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#BK78963</td>
-                                                <td>Amit Patel</td>
-                                                <td>Duronto Express</td>
-                                                <td>Kolkata → Hyderabad</td>
-                                                <td>22 Jun 2025</td>
-                                                <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>EGP1,820</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction3" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownAction3">
-                                                            <li><a class="dropdown-item" href="#">View Details</a></li>
-                                                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                            <li><a class="dropdown-item text-danger" href="#">Cancel</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#BK78962</td>
-                                                <td>Neha Singh</td>
-                                                <td>Jan Shatabdi</td>
-                                                <td>Pune → Mumbai</td>
-                                                <td>23 Jun 2025</td>
-                                                <td><span class="badge bg-danger">Cancelled</span></td>
-                                                <td>EGP550</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction4" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownAction4">
-                                                            <li><a class="dropdown-item" href="#">View Details</a></li>
-                                                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                            <li><a class="dropdown-item text-success" href="#">Restore</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>#BK78961</td>
-                                                <td>Vikram Mehta</td>
-                                                <td>Garib Rath</td>
-                                                <td>Delhi → Ahmedabad</td>
-                                                <td>24 Jun 2025</td>
-                                                <td><span class="badge bg-success">Confirmed</span></td>
-                                                <td>EGP1,250</td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownAction5" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            Action
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownAction5">
-                                                            <li><a class="dropdown-item" href="#">View Details</a></li>
-                                                            <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                            <li><a class="dropdown-item text-danger" href="#">Cancel</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0">Booking Statistics</h5>
-                            </div>
-                            <div class="card-body">
-                                <canvas id="bookingChart" height="250"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 
                 <!-- Quick Actions and System Alerts -->
                 <div class="row g-4">
@@ -382,16 +236,16 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                             </div>
                             <div class="card-body">
                                 <div class="d-grid gap-2">
-                                    <a href="admin_trains.php" class="btn btn-primary">
+                                    <a  href="<?php echo BASE_URL; ?>/index.php?action=manage_trains" class="btn btn-primary">
                                         <i class="bi bi-train-front me-2"></i> Add New Train
                                     </a>
-                                    <a href="admin_schedules.php" class="btn btn-info text-white">
+                                    <a href="<?php echo BASE_URL; ?>/index.php?action=manage_schedules" class="btn btn-info text-white">
                                         <i class="bi bi-calendar-plus me-2"></i> Create Schedule
                                     </a>
-                                    <a href="admin_users.php" class="btn btn-success">
+                                    <a href="<?php echo BASE_URL; ?>/index.php?action=manage_users" class="btn btn-success">
                                         <i class="bi bi-person-plus me-2"></i> Add New User
                                     </a>
-                                    <a href="admin_reports.php" class="btn btn-secondary">
+                                    <a href="<?php echo BASE_URL; ?>/index.php?action=manage_reports" class="btn btn-secondary">
                                         <i class="bi bi-file-earmark-bar-graph me-2"></i> Generate Report
                                     </a>
                                 </div>

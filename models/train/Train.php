@@ -1,5 +1,6 @@
 <?php
 
+require_once CORE_PATH . '/config.php';
 
 class Train{
     private $pdo;
@@ -178,4 +179,7 @@ class Train{
             return false;
         }
     }
+
+
+    
 }

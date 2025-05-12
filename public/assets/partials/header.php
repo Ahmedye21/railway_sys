@@ -15,7 +15,7 @@
                         <a class="nav-link"  href="<?php echo BASE_URL; ?>/index.php?action=train_tracking">Train Tracking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?php echo BASE_URL; ?>/index.php?action=station_arrivals">Schedules</a>
+                        <a class="nav-link" href="<?php echo BASE_URL; ?>/index.php?action=arrivals">Schedules</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>

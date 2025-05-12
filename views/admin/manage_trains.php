@@ -274,16 +274,16 @@ $routes = $routes ?? [];
         // Add this to your existing script section
         document.getElementById('editTrainModal').addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
-            const trainId = button.getAttribute('data-train-id');
-            const trainNumber = button.getAttribute('data-train-number');
-            const trainName = button.getAttribute('data-train-name');
-            const routeId = button.getAttribute('data-route-id');
-            const firstClass = button.getAttribute('data-first-class');
-            const secondClass = button.getAttribute('data-second-class');
-            const hasWifi = button.getAttribute('data-has-wifi') === '1';
-            const hasFood = button.getAttribute('data-has-food') === '1';
-            const hasPower = button.getAttribute('data-has-power') === '1';
-            
+            const trainId               = button.getAttribute('data-train-id');
+            const trainNumber           = button.getAttribute('data-train-number');
+            const trainName             = button.getAttribute('data-train-name');
+            const routeId               = button.getAttribute('data-route-id');
+            const firstClass            = button.getAttribute('data-first-class');
+            const secondClass           = button.getAttribute('data-second-class');
+            const hasWifi               = button.getAttribute('data-has-wifi') === '1';
+            const hasFood               = button.getAttribute('data-has-food') === '1';
+            const hasPower              = button.getAttribute('data-has-power') === '1';
+
             // Set form values
             this.querySelector('#editTrainId').value = trainId;
             this.querySelector('#editTrainNumber').value = trainNumber;

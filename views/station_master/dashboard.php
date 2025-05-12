@@ -129,9 +129,6 @@ $stations = $stations ?? [];
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Train Management</h5>
                         <div>
-                            <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#addTrainModal">
-                                <i class="bi bi-plus-circle"></i> Add Train
-                            </button>
                             <button class="btn btn-sm btn-outline-secondary" id="refreshTrains">
                                 <i class="bi bi-arrow-clockwise"></i> Refresh
                             </button>
@@ -316,24 +313,7 @@ $stations = $stations ?? [];
         </div>
     </div>
 
-    <!-- Add Train Modal (Placeholder) -->
-    <div class="modal fade" id="addTrainModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Train</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Train addition functionality would go here.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save Train</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

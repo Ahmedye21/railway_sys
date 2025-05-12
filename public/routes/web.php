@@ -66,11 +66,17 @@ switch ($action) {
         require_once CONTROLLERS_PATH . '/train/TrackingController.php';
         (new TrackingController())->index();
         break;
+        
+    case 'get_train_status':
+    require_once CONTROLLERS_PATH . '/train/TrackingController.php';
+    (new TrackingController())->getTrainStatus();
+    break;
 
-    case 'station_arrivals':
-        require_once CONTROLLERS_PATH . '/Stations.php';
+    case 'arrivals':
+        require_once CONTROLLERS_PATH . '/SchedulesController.php';
         (new StationsController())->arrivals();
         break;
+        
     
     case 'search_stations':
         require_once CONTROLLERS_PATH . '/station/Stations.php';

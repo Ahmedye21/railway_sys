@@ -54,10 +54,10 @@ class AuthController {
         
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             try {
-                $this->user->name = trim($_POST['name']);
-                $this->user->email = trim($_POST['email']);
-                $this->user->password = $_POST['password'];
-                $this->user->role = 'user';
+                $this->user->name       = trim($_POST['name']);
+                $this->user->email      = trim($_POST['email']);
+                $this->user->password   = $_POST['password'];
+                $this->user->role       = 'user';
                 
                 // Validation
                 if(empty($this->user->name)) {
