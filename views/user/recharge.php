@@ -57,7 +57,7 @@ unset($_SESSION['success']);
                                 <label class="form-label">Recharge Amount</label>
                                 <div class="input-group">
                                     <span class="input-group-text">EGP </span>
-                                    <input type="number" class="form-control" name="amount" min="100" step="50" required>
+                                    <input type="number" class="form-control" name="amount" min="100" required>
                                 </div>
                                 <small class="text-muted">Minimum recharge amount: EGP 100</small>
                             </div>

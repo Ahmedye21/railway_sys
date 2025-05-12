@@ -105,8 +105,6 @@ class User {
 
     public function rechargeBalance($userId, $amount) {
         try {
-            $this->conn->beginTransaction();
-
             // Update user balance
             $stmt = $this->conn->prepare("
                 UPDATE users 
@@ -124,14 +122,31 @@ class User {
             ");
             $stmt->execute([$userId, $amount]);
 
-            $this->conn->commit();
             return $amount;
         } catch (Exception $e) {
-            if ($this->conn->inTransaction()) {
-                $this->conn->rollBack();
-            }
-            throw $e;
+            error_log("Error recharging balance: " . $e->getMessage());
+            return false;
         }
+    }
+
+    public function updateBalance($userId, $newBalance) {
+        try {
+            $sql = "UPDATE users SET balance = :balance WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $result = $stmt->execute([
+                ':balance' => $newBalance,
+                ':id' => $userId
+            ]);
+            return $result;
+        } catch (Exception $e) {
+            error_log("Error updating user balance: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function hasSufficientBalance($userId, $amount) {
+        $balance = $this->getBalance($userId);
+        return (balance >= $amount);
     }
 
     public function getBalance($userId) {
