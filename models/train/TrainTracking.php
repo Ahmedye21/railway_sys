@@ -191,10 +191,8 @@ class TrainTracking {
                     $nextStationIndex = min(count($stations) - 1, $stationIndex + 1);
                     $nextStation = $stations[$nextStationIndex]['name'];
                     
-                    // Simulate expected arrival
                     $expectedArrival = date('Y-m-d H:i:s', time() + rand(15, 60) * 60);
                     
-                    // Simulate status
                     $statusOptions = ['On Time', 'Delayed', 'On Time', 'On Time'];
                     $trainStatus = $statusOptions[array_rand($statusOptions)];
                     
@@ -225,7 +223,6 @@ class TrainTracking {
                     }
                 }
                 
-                // Format last updated time
                 if (isset($status['last_updated'])) {
                     $updatedTime = strtotime($status['last_updated']);
                     $status['last_updated_formatted'] = "Today, " . date('h:i A', $updatedTime);
