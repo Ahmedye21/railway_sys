@@ -374,24 +374,24 @@ INSERT INTO train_status (train_id, schedule_id, current_station_id, next_statio
 (3, 8, 1, 2, 'On Time', 0, DATE_ADD(NOW(), INTERVAL 45 MINUTE));
 
 -- Insert some sample bookings
-INSERT INTO bookings (user_id, train_id, schedule_id, from_station_id, to_station_id, booking_date, travel_date, travel_class, ticket_count, total_amount, booking_status, pnr_number) VALUES
-(3, 1, 1, 1, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'first', 1, 480.00, 'Confirmed', 'PNR18745621'),
-(3, 2, 4, 1, 6, DATE_SUB(CURDATE(), INTERVAL 3 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 'second', 2, 560.00, 'Confirmed', 'PNR18745622'),
-(4, 3, 8, 6, 10, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 'first', 1, 1120.00, 'Confirmed', 'PNR18745623');
+INSERT INTO bookings (user_id, train_id, schedule_id, from_station_id, to_station_id, booking_date, travel_date, travel_class, ticket_count, total_amount, booking_status) VALUES
+(3, 1, 1, 1, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'first', 1, 480.00, 'Confirmed'),
+(3, 2, 4, 1, 6, DATE_SUB(CURDATE(), INTERVAL 3 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 'second', 2, 560.00, 'Confirmed'),
+(4, 3, 8, 6, 10, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 'first', 1, 1120.00, 'Confirmed');
 
 -- Insert some sample transactions
-INSERT INTO transactions (user_id, amount, transaction_type, reference_id, description) VALUES
-(3, 5000.00, 'Deposit', NULL, 'Initial account deposit'),
-(3, -480.00, 'Booking', 1, 'Booking PNR18745621'),
-(3, -560.00, 'Booking', 2, 'Booking PNR18745622'),
-(4, 3500.00, 'Deposit', NULL, 'Initial account deposit'),
-(4, -1120.00, 'Booking', 3, 'Booking PNR18745623');
+INSERT INTO transactions (user_id, amount, transaction_type, description) VALUES
+(3, 5000.00, 'Deposit', 'Initial account deposit'),
+(3, -480.00, 'Booking', 'Booking'),
+(3, -560.00, 'Booking', 'Booking'),
+(4, 3500.00, 'Deposit', 'Initial account deposit'),
+(4, -1120.00, 'Booking', 'Booking');
 
 -- Insert some sample notifications
 INSERT INTO notifications (user_id, title, message) VALUES
-(3, 'Booking Confirmed', 'Your booking (PNR18745621) has been confirmed.'),
-(3, 'Booking Confirmed', 'Your booking (PNR18745622) has been confirmed.'),
-(4, 'Booking Confirmed', 'Your booking (PNR18745623) has been confirmed.'),
+(3, 'Booking Confirmed', 'Your booking has been confirmed.'),
+(3, 'Booking Confirmed', 'Your booking has been confirmed.'),
+(4, 'Booking Confirmed', 'Your booking has been confirmed.'),
 (NULL, 'System Maintenance', 'The system will undergo maintenance on Sunday from 2 AM to 4 AM.');
 
 -- Insert delay log with computed delay_minutes
