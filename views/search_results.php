@@ -178,7 +178,7 @@
                                                 </div>
                                                 
                                                 <div>
-                                                    <a href="booking.php?train_id=<?php echo $train['train_id']; ?>&schedule_id=<?php echo $train['schedule_id']; ?>&departure=<?php echo urlencode($departureStation); ?>&arrival=<?php echo urlencode($arrivalStation); ?>&date=<?php echo urlencode($departureDate); ?>&class=<?php echo urlencode($travelClass); ?>&type=<?php echo urlencode($tripType); ?>&return_date=<?php echo urlencode($returnDate); ?>" class="btn btn-primary btn-lg w-100">
+                                                    <a href="<?php echo BASE_URL; ?>/index.php?action=book_train">
                                                         Select
                                                     </a>
                                                     

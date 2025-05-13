@@ -241,5 +241,24 @@ class User {
             return false;
         }
     }
+    public function deductBalance($userId, $amount) {
+    $stmt = $this->conn->prepare("
+        UPDATE users 
+        SET balance = balance - :amount 
+        WHERE id = :user_id AND balance >= :amount
+    ");
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':amount', $amount);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+    }
+
+    public function getUserBalance($userId) {
+        $stmt = $this->conn->prepare("SELECT balance FROM users WHERE id = :user_id");
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['balance'] : 0;
+    }
 }
 ?>

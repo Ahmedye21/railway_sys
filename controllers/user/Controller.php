@@ -1,5 +1,6 @@
 <?php
 require_once MODELS_PATH . '/user/User.php';
+require_once MODELS_PATH . '/ticket/Ticket.php';
 
 class UserDashboardController {
     private $userModel;
@@ -13,6 +14,15 @@ class UserDashboardController {
             header("Location: index.php?action=login");
             exit;
         }
+
+        $ticketModel = new Ticket();
+        $upcomingTrip = $ticketModel->getTicketByUserId($_SESSION['user_id']);
+
+
+        $data = [
+            'ticket' => $upcomingTrip
+        ];
+        
         
         require_once VIEWS_PATH . '/user/dashboard.php';
     }

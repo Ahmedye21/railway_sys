@@ -17,9 +17,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo BASE_URL; ?>/index.php?action=arrivals">Schedules</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
+
                 </ul>
                 <div class="d-flex gap-2">
                     <?php 

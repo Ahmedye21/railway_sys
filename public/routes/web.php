@@ -49,6 +49,13 @@ switch ($action) {
         (new SearchController())->search();
         break;
 
+    case 'book_train':
+        require_once CONTROLLERS_PATH . '/BookingController.php';
+        (new BookingController())->processBooking();
+        break;
+
+
+
     case 'profile':
         require_once CONTROLLERS_PATH . '/user/Controller.php';
         (new UserDashboardController())->index();
@@ -66,7 +73,7 @@ switch ($action) {
         require_once CONTROLLERS_PATH . '/train/TrackingController.php';
         (new TrackingController())->index();
         break;
-        
+
     case 'get_train_status':
     require_once CONTROLLERS_PATH . '/train/TrackingController.php';
     (new TrackingController())->getTrainStatus();

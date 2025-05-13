@@ -180,6 +180,28 @@ class Train{
         }
     }
 
+    public function getTrainById($trainId) {
+        $query = "SELECT 
+                    train_id,
+                    train_number,
+                    name,
+                    route_id,
+                    total_first_class_seats,
+                    total_second_class_seats,
+                    has_wifi,
+                    has_food,
+                    has_power_outlets
+                FROM 
+                    trains
+                WHERE 
+                    train_id = :train_id";
 
-    
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(":train_id", $trainId);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
 }

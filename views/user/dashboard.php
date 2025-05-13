@@ -178,147 +178,106 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                         </div>
                     </div>
                 </div>
-                
-                <!-- Upcoming Trip -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i> Your Next Journey</h5>
-                    </div>
+
+
+
+
+
+<div class="row">
+    <?php if (!empty($upcomingTrip)): ?>
+        <?php foreach ($upcomingTrip as $t): ?>
+            <div class="col-md-12 mb-3">
+                <div class="card">
                     <div class="card-body">
-                        <div class="upcoming-trip border">
-                            <div class="p-3 bg-light border-bottom">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <span class="badge bg-primary">Upcoming</span>
-                                        <span class="ms-2 text-muted">PNR: RAIL7896542</span>
-                                    </div>
-                                    <div class="text-end">
-                                        <strong class="text-success">Confirmed</strong>
-                                    </div>
-                                </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-primary">Upcoming</span>
+                                <span class="ms-2 text-muted">Booking ID: <?= htmlspecialchars($t['booking_id']) ?></span>
                             </div>
-                            <div class="p-3">
-                                <div class="row align-items-center">
-                                    <div class="col-md-4 mb-3 mb-md-0">
-                                        <h5 class="mb-1">Rajdhani Express</h5>
-                                        <span class="text-muted">Train #12555</span>
-                                    </div>
-                                    <div class="col-md-5 mb-3 mb-md-0">
-                                        <div class="d-flex align-items-center">
-                                            <div class="text-center">
-                                                <h6 class="mb-0">Delhi</h6>
-                                                <small class="text-muted">05:30</small>
-                                            </div>
-                                            <div class="mx-3 flex-grow-1 text-center">
-                                                <i class="bi bi-arrow-right text-muted"></i>
-                                                <div><small class="text-muted">6h 30m</small></div>
-                                            </div>
-                                            <div class="text-center">
-                                                <h6 class="mb-0">Mumbai</h6>
-                                                <small class="text-muted">12:00</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 text-md-end">
-                                        <div class="mb-1"><strong>June 20, 2025</strong></div>
-                                        <span class="badge bg-info">AC First Class</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-3 bg-light border-top">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <small class="text-muted">Seat: <strong>A12</strong> • Platform: <strong>5</strong></small>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-primary me-2">
-                                            <i class="bi bi-file-earmark-text me-1"></i> View Details
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="text-end">
+                                <strong class="text-success"><?= htmlspecialchars($t['booking_status']) ?></strong>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer bg-white text-center">
-                        <a href="my-bookings.php" class="btn btn-sm btn-outline-primary">View All Bookings</a>
+                        <div class="mt-2">
+                            <p>Train: <?= htmlspecialchars($t['name']) ?> (<?= htmlspecialchars($t['train_number']) ?>)</p>
+                            <p>Route: <?= htmlspecialchars($t['from_station_name']) ?> to <?= htmlspecialchars($t['to_station_name']) ?></p>
+                            <p>Travel Date: <?= htmlspecialchars($t['travel_date']) ?></p>
+                            <p>Class: <?= htmlspecialchars($t['travel_class']) ?></p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-end mt-3">
+                            <!-- Cancel Button (opens modal) -->
+                            <button class="btn btn-outline-danger me-2" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#cancelModal"
+                                    data-booking-id="<?= $t['booking_id'] ?>">
+                                <i class="fas fa-times-circle"></i> Cancel Ticket
+                            </button>
+                            
+                            <!-- Print Button (download as PDF) -->
+                            <a href="generate_pdf.php?booking_id=<?= $t['booking_id'] ?>" 
+                               class="btn btn-outline-primary" 
+                               target="_blank">
+                                <i class="fas fa-file-pdf"></i> Download Ticket
+                            </a>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Recent Activity and Quick Actions -->
-                <div class="row g-4">
-                    <div class="col-md-7">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0"><i class="bi bi-activity me-2"></i> Recent Activity</h5>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="col-12">
+            <div class="alert alert-info">No upcoming trips found.</div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Cancel Ticket Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Cancellation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel ticket <strong id="modalBookingId"></strong>?</p>
+                <p class="text-danger">Cancellation fees may apply.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="confirmCancel">Yes, Cancel Ticket</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                            
+
+
+
+                <!-- Cancel Ticket Confirmation Modal -->
+                <div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Cancellation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="card-body">
-                                <div class="activity-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0">Ticket Booked</h6>
-                                            <small class="text-muted">Delhi to Mumbai - Rajdhani Express</small>
-                                        </div>
-                                        <small class="text-nowrap">Today</small>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0">Added Money to Wallet</h6>
-                                            <small class="text-muted">Added EGP 2,000 to your wallet</small>
-                                        </div>
-                                        <small class="text-nowrap">Yesterday</small>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0">Completed Journey</h6>
-                                            <small class="text-muted">Bangalore to Chennai - Shatabdi Express</small>
-                                        </div>
-                                        <small class="text-nowrap">Jun 10</small>
-                                    </div>
-                                </div>
-                                <div class="activity-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-0">Profile Updated</h6>
-                                            <small class="text-muted">Updated contact information</small>
-                                        </div>
-                                        <small class="text-nowrap">Jun 08</small>
-                                    </div>
-                                </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to cancel this ticket?</p>
+                                <p class="text-danger">Cancellation fees may apply.</p>
                             </div>
-                            <div class="card-footer bg-white text-center">
-                                <a href="#" class="btn btn-sm btn-outline-secondary">View Full History</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-5">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-header bg-white">
-                                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i> Quick Actions</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="d-grid gap-3">
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#searchTicketsModal" class="btn btn-outline-primary">
-                                        <i class="bi bi-search me-2"></i> Book New Ticket
-                                    </a>
-                                    <a href="<?php echo BASE_URL; ?>/index.php?action=funds" class="btn btn-outline-success">
-                                        <i class="bi bi-wallet2 me-2"></i> Add Money to Wallet
-                                    </a>
-                                    <a href="my-bookings.php" class="btn btn-outline-info">
-                                        <i class="bi bi-ticket-perforated me-2"></i> View My Bookings
-                                    </a>
-                                    <a href="time-tracking.html" class="btn btn-outline-secondary">
-                                        <i class="bi bi-clock-history me-2"></i> Track Train Status
-                                    </a>
-                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger" id="confirmCancel">Yes, Cancel Ticket</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+
             </div>
         </div>
     </div>
@@ -458,6 +417,22 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
 
     <!-- Bootstrap JS with Popper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set booking ID when modal opens
+    $('#cancelModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var bookingId = button.data('booking-id'); // Extract booking ID
+        $('#modalBookingId').text(bookingId);
+        
+        // Update confirm button to include booking ID
+        $('#confirmCancel').off('click').on('click', function() {
+            window.location.href = 'cancel_ticket.php?booking_id=' + bookingId;
+        });
+    });
+});
+</script>
     <script>
         // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];

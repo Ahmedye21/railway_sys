@@ -30,7 +30,6 @@ class SearchController {
             $departureDateObj = new DateTime($departureDate);
             $dayOfWeek = $departureDateObj->format('l');
             
-            // Use Train model for train data
             $trainResults = $this->trainModel->searchTrains($departureStation, $arrivalStation, $dayOfWeek);
             
             foreach ($trainResults as $train) {
@@ -53,9 +52,9 @@ class SearchController {
 
     private function validateInput($departureStation, $arrivalStation, $departureDate, $tripType, $returnDate) {
         $errors = [];
-        if (empty($departureStation)) $errors[] = 'Please select a departure station.';
-        if (empty($arrivalStation)) $errors[] = 'Please select an arrival station.';
-        if ($departureStation === $arrivalStation) $errors[] = 'Departure and arrival stations cannot be the same.';
+        if (empty($departureStation)) $errors[]                 = 'Please select a departure station.';
+        if (empty($arrivalStation)) $errors[]                   = 'Please select an arrival station.';
+        if ($departureStation === $arrivalStation) $errors[]    = 'Departure and arrival stations cannot be the same.';
         if (empty($departureDate)) $errors[] = 'Please select a departure date.';
         if ($tripType === 'roundTrip' && empty($returnDate)) $errors[] = 'Please select a return date.';
         return $errors;
@@ -75,24 +74,24 @@ class SearchController {
         $travelTime = sprintf("%d:%02d", $interval->h, $interval->i);
         
         return [
-            'train_id'              => $train['train_id'],
+            'train_id'                  => $train['train_id'],
             'train_number'              => $train['train_number'],
             'train_name'                => $train['train_name'],
             'route_name'                => $train['route_name'],
-            'route_id'              => $train['route_id'],
+            'route_id'                  => $train['route_id'],
             'schedule_id'               => $train['schedule_id'],
-            'departure_station'                 => $departureStation,
-            'arrival_station'               => $arrivalStation,
-            'departure_time'                => $departureTime->format('H:i'),
+            'departure_station'         => $departureStation,
+            'arrival_station'           => $arrivalStation,
+            'departure_time'            => $departureTime->format('H:i'),
             'arrival_time'              => $arrivalTime->format('H:i'),
             'travel_time'               => $travelTime,
-            'intermediate_stops'                => count($stations) - 2,
-            'first_class_price'                 => $train['first_class_price'],
-            'second_class_price'                => $train['second_class_price'],
-            'has_wifi'              => $train['has_wifi'],
-            'has_food'              => $train['has_food'],
-            'has_power_outlets'                 => $train['has_power_outlets'],
-            'stations'              => $stationNames
+            'intermediate_stops'        => count($stations) - 2,
+            'first_class_price'         => $train['first_class_price'],
+            'second_class_price'        => $train['second_class_price'],
+            'has_wifi'                  => $train['has_wifi'],
+            'has_food'                  => $train['has_food'],
+            'has_power_outlets'         => $train['has_power_outlets'],
+            'stations'                  => $stationNames
         ];
     }
 
@@ -102,9 +101,7 @@ class SearchController {
         return $dateObj->format('D, M j, Y');
     }
 
-    /**
-     * Get all stations for dropdowns (used in search form)
-     */
+
     public function getAllStations() {
         return $this->stationModel->getAllStations();
     }

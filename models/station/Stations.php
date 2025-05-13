@@ -9,11 +9,7 @@ class StationModel {
         $this->pdo = DatabaseConfig::getConnection();
     }
     
-    /**
-     * Get all available stations
-     * 
-     * @return array List of stations
-     */
+
     public function getAllStations() {
         try {
             $sql = "SELECT station_id, name FROM stations WHERE is_active = 1 ORDER BY name";
@@ -63,12 +59,7 @@ class StationModel {
     }
     
     
-    /**
-     * Get station by ID
-     * 
-     * @param int $stationId
-     * @return array|false Station data or false if not found
-     */
+
     public function getStationById($stationId) {
         try {
             $sql = "SELECT * FROM stations WHERE station_id = :station_id";
@@ -81,12 +72,7 @@ class StationModel {
         }
     }
     
-    /**
-     * Get station by name
-     * 
-     * @param string $stationName
-     * @return array|false Station data or false if not found
-     */
+
     public function getStationByName($stationName) {
         try {
             $sql = "SELECT * FROM stations WHERE name = :name";
@@ -99,12 +85,7 @@ class StationModel {
         }
     }
     
-    /**
-     * Search stations by name or code
-     * 
-     * @param string $query
-     * @return array Matching stations
-     */
+
     public function searchStations($query) {
         try {
             $sql = "SELECT station_id, name, code FROM stations 
@@ -119,12 +100,7 @@ class StationModel {
         }
     }
 
-        /**
-     * Get trains arriving at/departing from a station
-     * 
-     * @param int $stationId
-     * @return array List of trains
-     */
+
     public function getTrainsByStation($stationId) {
         try {
             $sql = "SELECT 
@@ -164,14 +140,6 @@ class StationModel {
 
 
 
-    /**
-     * Add a new station
-     * 
-     * @param string $name
-     * @param string $code
-     * @param string $city
-     * @return bool True on success, false on failure
-     */
     public function addStation($name, $code, $city) {
         try {
             $sql = "INSERT INTO stations (name, code, city) VALUES (:name, :code, :city)";
@@ -182,16 +150,6 @@ class StationModel {
             return false;
         }
     }
-
-    /**
-     * Update an existing station
-     * 
-     * @param int $stationId
-     * @param string $name
-     * @param string $code
-     * @param string $city
-     * @return bool True on success, false on failure
-     */
 
     public function updateStation($stationId, $name, $code, $city) {
         try {
@@ -204,18 +162,24 @@ class StationModel {
         }
     }
 
-    
-        /**
-        * Delete a station
-        * 
-        * @param int $stationId
-        * @return bool True on success, false on failure
-        */
+
         public function deleteStation($stationId) {
             try {
                 $sql = "DELETE FROM stations WHERE station_id = :station_id";
                 $stmt = $this->pdo->prepare($sql);
                 return $stmt->execute([':station_id' => $stationId]);
+            } catch (PDOException $e) {
+                error_log("StationModel Error: " . $e->getMessage());
+                return false;
+            }
+        }
+
+        public function getStationIdByName($stationName) {
+            try {
+                $sql = "SELECT station_id FROM stations WHERE name = :name";
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([':name' => $stationName]);
+                return $stmt->fetchColumn();
             } catch (PDOException $e) {
                 error_log("StationModel Error: " . $e->getMessage());
                 return false;

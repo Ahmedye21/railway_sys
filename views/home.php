@@ -86,6 +86,22 @@
             </button>
         </div>
     </section>
+
+    <?php if (isset($_SESSION['success_message'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?php echo $_SESSION['success_message']; ?>
+        <?php if (isset($_SESSION['new_balance'])): ?>
+            <br>Your new balance: EGP <?php echo number_format($_SESSION['new_balance'], 2); ?>
+        <?php endif; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php 
+    unset($_SESSION['success_message']);
+    unset($_SESSION['new_balance']);
+    ?>
+<?php endif; ?>
+
+
     
     <!-- Benefits Section -->
     <section class="benefits-section">
