@@ -158,6 +158,15 @@ switch ($action) {
         require_once CONTROLLERS_PATH . '/admin/Controller.php';
         (new AdminDashboardController())->createAlert();
         break;
+    
+    case 'toggle_notifications':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        require_once CONTROLLERS_PATH . '/user/Controller.php';
+        (new UserDashboardController())->toggleNotifications();
+        break;
         
 
     // You can uncomment these as you implement them

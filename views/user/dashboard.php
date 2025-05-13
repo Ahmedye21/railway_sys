@@ -288,6 +288,10 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                                         <small class="text-nowrap">Jun 08</small>
                                     </div>
                                 </div>
+                                <a href="<?php echo BASE_URL; ?>/index.php?action=toggle_notifications" class="btn btn-outline-<?php echo $userModel->getNotificationPreference($_SESSION['user_id']) ? 'danger' : 'success'; ?>">
+                                    <i class="bi bi-<?php echo $userModel->getNotificationPreference($_SESSION['user_id']) ? 'bell-slash' : 'bell'; ?> me-2"></i> 
+                                    <?php echo $userModel->getNotificationPreference($_SESSION['user_id']) ? 'Disable' : 'Enable'; ?> Notifications
+                                </a>
                             </div>
                             <div class="card-footer bg-white text-center">
                                 <a href="#" class="btn btn-sm btn-outline-secondary">View Full History</a>

@@ -273,5 +273,36 @@ class User {
             return false;
         }
     }
+
+        public function updateNotificationPreference($userId, $enabled) {
+        try {
+            $stmt = $this->conn->prepare("
+                UPDATE users 
+                SET notifications_enabled = ? 
+                WHERE id = ?
+            ");
+            $stmt->execute([$enabled ? 1 : 0, $userId]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Error updating notification preference: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getNotificationPreference($userId) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT notifications_enabled 
+                FROM users 
+                WHERE id = ?
+            ");
+            $stmt->execute([$userId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return isset($result['notifications_enabled']) ? (bool)$result['notifications_enabled'] : true;
+        } catch (Exception $e) {
+            error_log("Error getting notification preference: " . $e->getMessage());
+            return true; // Default to enabled if error
+        }
+    }
 }
 ?>

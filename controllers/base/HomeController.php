@@ -2,6 +2,7 @@
 // controllers/base/HomeController.php
 
 require_once MODELS_PATH . '/station/Stations.php';
+require_once MODELS_PATH . '/user/User.php';
 
 class HomeController {
 
@@ -10,11 +11,15 @@ class HomeController {
     }
 
     public function home() {
-        $stationModel   = new StationModel();
-        $stations       = $stationModel->getAllStations();
-        $notifications = $this->getNotifications();
+        $stationModel = new StationModel();
+        $stations = $stationModel->getAllStations();
+        $notifications = [];
         
-
+        // Only fetch notifications if user hasn't opted out
+        $userModel = new User();
+        if (!isset($_SESSION['user_id']) || $userModel->getNotificationPreference($_SESSION['user_id'])) {
+            $notifications = $this->getNotifications();
+        }
         
         require_once VIEWS_PATH . '/home.php';
     }
