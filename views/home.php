@@ -58,6 +58,17 @@
     </section>
     <?php endif; ?>
 
+    <section class="container mt-4 mb-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Egypt Railway Network Map</h3>
+        </div>
+        <div class="card-body text-center">
+            <img src="/railway_sys/public/images/railway_map.png" alt="Egypt Railway Network Map" class="img-fluid">
+        </div>
+    </div>
+</section>
+
     <!-- Features Section -->
     <section class="features-section container mb-5">
         <h2 class="text-center section-title">Our Services</h2>
