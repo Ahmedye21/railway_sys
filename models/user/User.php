@@ -256,5 +256,22 @@ class User {
             return false;
         }
     }
+
+    public function createSystemNotification($title, $message) {
+        try {
+            $stmt = $this->conn->prepare("
+                INSERT INTO notifications (
+                    user_id, 
+                    title,
+                    message
+                ) VALUES (NULL, ?, ?)
+            ");
+            $stmt->execute([$title, $message]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Error creating system notification: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 ?>

@@ -37,6 +37,27 @@
         </div>
     </section>
 
+    <!-- Notifications Banner -->
+    <?php if (!empty($notifications)): ?>
+    <section class="container mt-4">
+        <div id="notificationCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <?php foreach ($notifications as $index => $notification): ?>
+                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                    <div class="alert alert-info d-flex align-items-center m-0">
+                        <i class="bi bi-bell-fill me-2"></i>
+                        <div>
+                            <strong><?= htmlspecialchars($notification['title']) ?>:</strong> 
+                            <?= htmlspecialchars($notification['message']) ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <!-- Features Section -->
     <section class="features-section container mb-5">
         <h2 class="text-center section-title">Our Services</h2>

@@ -292,6 +292,29 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Send System Alert</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="<?php echo BASE_URL; ?>/index.php?action=create_alert" method="POST">
+                                    <div class="mb-3">
+                                        <label for="alert_title" class="form-label">Alert Title</label>
+                                        <input type="text" class="form-control" id="alert_title" name="alert_title" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="alert_message" class="form-label">Alert Message</label>
+                                        <textarea class="form-control" id="alert_message" name="alert_message" rows="3" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-danger w-100">
+                                        <i class="bi bi-bell me-2"></i>Send Alert to All Users
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     
 
                 </div>
