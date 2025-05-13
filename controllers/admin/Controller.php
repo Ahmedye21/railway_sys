@@ -221,5 +221,30 @@ class AdminDashboardController {
         exit;
 }
 
+    public function createAlert() {
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = $_POST['alert_title'] ?? '';
+            $message = $_POST['alert_message'] ?? '';
+            
+            if (empty($title) || empty($message)) {
+                $_SESSION['error'] = "Both title and message are required.";
+            } else {
+                if ($this->userModel->createSystemNotification($title, $message)) {
+                    $_SESSION['message'] = "Alert sent successfully to all users.";
+                } else {
+                    $_SESSION['error'] = "Failed to send alert.";
+                }
+            }
+        }
+        
+        header("Location: index.php?action=admin_dashboard");
+        exit;
+    }
+
 
 }

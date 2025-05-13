@@ -24,6 +24,9 @@ class UserDashboardController {
         ];
         
         
+        // Initialize user model to pass to the view
+        $userModel = $this->userModel;
+        
         require_once VIEWS_PATH . '/user/dashboard.php';
     }
     
@@ -60,6 +63,28 @@ class UserDashboardController {
         }
         
         header("Location: index.php?action=funds");
+        exit;
+    }
+
+    public function toggleNotifications() {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        
+        $currentSetting = $this->userModel->getNotificationPreference($_SESSION['user_id']);
+        $newSetting = !$currentSetting;
+        
+        if ($this->userModel->updateNotificationPreference($_SESSION['user_id'], $newSetting)) {
+            $_SESSION['success'] = $newSetting 
+                ? "You have successfully opted in to system notifications." 
+                : "You have successfully opted out of system notifications.";
+        } else {
+            $_SESSION['error'] = "Failed to update notification preferences.";
+        }
+        
+        // Redirect back to dashboard
+        header("Location: index.php?action=profile");
         exit;
     }
 }

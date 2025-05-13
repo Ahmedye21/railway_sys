@@ -9,6 +9,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin', 'station_master') NOT NULL DEFAULT 'user',
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    notifications_enabled BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -136,7 +137,7 @@ CREATE TABLE bookings (
     schedule_id INT NOT NULL,
     from_station_id INT NOT NULL,
     to_station_id INT NOT NULL,
-    booking_date DATE NOT NULL,
+    booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     travel_date DATE NOT NULL,
     travel_class ENUM('first', 'second') NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
@@ -197,21 +198,6 @@ CREATE TABLE delay_logs (
     FOREIGN KEY (reported_by) REFERENCES users(id),
     INDEX idx_train_id (train_id),
     INDEX idx_schedule_id (schedule_id)
-);
-
--- Seat inventory table (to track available seats for each journey)
-CREATE TABLE seat_inventory (
-    inventory_id INT AUTO_INCREMENT PRIMARY KEY,
-    train_id INT NOT NULL,
-    schedule_id INT NOT NULL,
-    travel_date DATE NOT NULL,
-    first_class_available INT NOT NULL,
-    second_class_available INT NOT NULL,
-    FOREIGN KEY (train_id) REFERENCES trains(train_id),
-    FOREIGN KEY (schedule_id) REFERENCES schedules(schedule_id),
-    UNIQUE KEY (train_id, schedule_id, travel_date),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Insert sample users
@@ -361,12 +347,6 @@ INSERT INTO pricing (route_id, from_station_id, to_station_id, first_class_price
 (3, 7, 10, 880.00, 440.00),  -- October to Aswan
 (3, 9, 10, 320.00, 160.00);  -- Luxor to Aswan
 
--- Insert sample seat inventory
-INSERT INTO seat_inventory (train_id, schedule_id, travel_date, first_class_available, second_class_available) VALUES
-(1, 1, DATE_ADD(CURDATE(), INTERVAL 2 DAY), 49, 150),  -- One first class seat booked
-(2, 4, DATE_ADD(CURDATE(), INTERVAL 5 DAY), 60, 178),  -- Two second class seats booked
-(3, 8, DATE_ADD(CURDATE(), INTERVAL 10 DAY), 79, 240); -- One first class seat booked
-
 -- Insert some sample train status updates
 INSERT INTO train_status (train_id, schedule_id, current_station_id, next_station_id, status, delay_minutes, expected_arrival) VALUES
 (1, 1, 2, 3, 'Departed', 0, DATE_ADD(NOW(), INTERVAL 1 HOUR)),
@@ -374,24 +354,24 @@ INSERT INTO train_status (train_id, schedule_id, current_station_id, next_statio
 (3, 8, 1, 2, 'On Time', 0, DATE_ADD(NOW(), INTERVAL 45 MINUTE));
 
 -- Insert some sample bookings
-INSERT INTO bookings (user_id, train_id, schedule_id, from_station_id, to_station_id, booking_date, travel_date, travel_class, ticket_count, total_amount, booking_status, pnr_number) VALUES
-(3, 1, 1, 1, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'first', 1, 480.00, 'Confirmed', 'PNR18745621'),
-(3, 2, 4, 1, 6, DATE_SUB(CURDATE(), INTERVAL 3 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 'second', 2, 560.00, 'Confirmed', 'PNR18745622'),
-(4, 3, 8, 6, 10, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 'first', 1, 1120.00, 'Confirmed', 'PNR18745623');
+INSERT INTO bookings (user_id, train_id, schedule_id, from_station_id, to_station_id, booking_date, travel_date, travel_class, total_amount, booking_status) VALUES
+(3, 1, 1, 1, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'first', 480.00, 'Confirmed'),
+(3, 2, 4, 1, 6, DATE_SUB(CURDATE(), INTERVAL 3 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 'second', 560.00, 'Confirmed'),
+(4, 3, 8, 6, 10, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 'first', 1120.00, 'Confirmed');
 
 -- Insert some sample transactions
-INSERT INTO transactions (user_id, amount, transaction_type, reference_id, description) VALUES
-(3, 5000.00, 'Deposit', NULL, 'Initial account deposit'),
-(3, -480.00, 'Booking', 1, 'Booking PNR18745621'),
-(3, -560.00, 'Booking', 2, 'Booking PNR18745622'),
-(4, 3500.00, 'Deposit', NULL, 'Initial account deposit'),
-(4, -1120.00, 'Booking', 3, 'Booking PNR18745623');
+INSERT INTO transactions (user_id, amount, transaction_type, description) VALUES
+(3, 5000.00, 'Deposit', 'Initial account deposit'),
+(3, -480.00, 'Booking', 'Booking'),
+(3, -560.00, 'Booking', 'Booking'),
+(4, 3500.00, 'Deposit', 'Initial account deposit'),
+(4, -1120.00, 'Booking', 'Booking');
 
 -- Insert some sample notifications
 INSERT INTO notifications (user_id, title, message) VALUES
-(3, 'Booking Confirmed', 'Your booking (PNR18745621) has been confirmed.'),
-(3, 'Booking Confirmed', 'Your booking (PNR18745622) has been confirmed.'),
-(4, 'Booking Confirmed', 'Your booking (PNR18745623) has been confirmed.'),
+(3, 'Booking Confirmed', 'Your booking has been confirmed.'),
+(3, 'Booking Confirmed', 'Your booking has been confirmed.'),
+(4, 'Booking Confirmed', 'Your booking has been confirmed.'),
 (NULL, 'System Maintenance', 'The system will undergo maintenance on Sunday from 2 AM to 4 AM.');
 
 -- Insert delay log with computed delay_minutes
