@@ -154,9 +154,6 @@ $stations = $stations ?? [];
                                                 <div class="d-flex flex-column align-items-center">
                                                     <i class="bi bi-train text-muted fs-1 mb-2"></i>
                                                     <p class="text-muted">No trains available</p>
-                                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addTrainModal">
-                                                        Add First Train
-                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
