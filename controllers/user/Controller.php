@@ -19,15 +19,51 @@ class UserDashboardController {
         $upcomingTrip = $ticketModel->getTicketByUserId($_SESSION['user_id']);
 
 
+
         $data = [
-            'ticket' => $upcomingTrip
+        'ticket' => $upcomingTrip
         ];
         
-        
-        // Initialize user model to pass to the view
         $userModel = $this->userModel;
-        
+        extract($data);
+
         require_once VIEWS_PATH . '/user/dashboard.php';
+    }
+
+    public function cancelTicket() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            exit;
+        }
+        
+        $bookingId = isset($_POST['booking_id']) ? (int)$_POST['booking_id'] : 0;
+        
+        if (!$bookingId) {
+            http_response_code(400); 
+            echo json_encode(['success' => false, 'message' => 'Invalid booking ID']);
+            exit;
+        }
+        
+        $ticketModel = new Ticket();
+        $ticket = $ticketModel->getTicketById($bookingId);
+        
+        if (!$ticket || $ticket['user_id'] != $_SESSION['user_id']) {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'You are not authorized to cancel this ticket']);
+            exit;
+        }
+        
+        // Cancel the ticket
+        $result = $ticketModel->cancelTicket($bookingId);
+        
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Ticket cancelled successfully']);
+        } else {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['success' => false, 'message' => 'Failed to cancel ticket']);
+        }
+        exit;
     }
     
     public function funds() {

@@ -17,7 +17,7 @@ class HomeController {
         
         // Only fetch notifications if user hasn't opted out
         $userModel = new User();
-        if (!isset($_SESSION['user_id']) || $userModel->getNotificationPreference($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user_id']) ) {
             $notifications = $this->getNotifications();
         }
         

@@ -62,6 +62,14 @@ switch ($action) {
         break;
 
 
+    case 'cancel_ticket':
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: index.php?action=login");
+            exit;
+        }
+        require_once CONTROLLERS_PATH . '/user/Controller.php';
+        (new UserDashboardController())->cancelTicket();
+        break;
 
 
     case 'funds':

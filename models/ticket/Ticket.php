@@ -46,10 +46,39 @@ class Ticket {
         WHERE 
             b.user_id = :userId
         ORDER BY 
-            b.travel_date DESC, b.booking_date DESC;";
+            b.travel_date DESC, b.booking_date DESC";
+            
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function cancelTicket($ticketId) {
+        if (!is_numeric($ticketId)) {
+            throw new InvalidArgumentException("Ticket ID must be a numeric value");
+        }
 
+        $sql = "UPDATE bookings SET booking_status = 'cancelled' WHERE booking_id = :ticketId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':ticketId', $ticketId, PDO::PARAM_INT);
+        
+        return $stmt->execute();
+    }
+
+    public function getTicketById($ticketId) {
+        if (!is_numeric($ticketId)) {
+            throw new InvalidArgumentException("Ticket ID must be a numeric value");
+        }
+
+        $sql = "SELECT * FROM bookings WHERE booking_id = :ticketId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':ticketId', $ticketId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
         
 
 

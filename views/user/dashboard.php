@@ -184,8 +184,8 @@ if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
 
 
 <div class="row">
-    <?php if (!empty($upcomingTrip)): ?>
-        <?php foreach ($upcomingTrip as $t): ?>
+    <?php if (!empty($ticket)): ?>
+        <?php foreach ($ticket as $t): ?>
             <div class="col-md-12 mb-3">
                 <div class="card">
                     <div class="card-body">
@@ -463,5 +463,66 @@ document.addEventListener('DOMContentLoaded', function() {
             arrivalInput.value = temp;
         });
     </script>
+
+    <script>
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the modal element
+    const cancelModal = document.getElementById('cancelModal');
+    
+    // Add event listener for when the modal is shown
+    cancelModal.addEventListener('show.bs.modal', function(event) {
+        // Get the button that triggered the modal
+        const button = event.relatedTarget;
+        
+        // Extract booking ID from data-* attribute
+        const bookingId = button.getAttribute('data-booking-id');
+        
+        // Update the modal's content
+        document.getElementById('modalBookingId').textContent = bookingId;
+        
+        // Store the booking ID in the confirm button's data attribute
+        document.getElementById('confirmCancel').setAttribute('data-booking-id', bookingId);
+    });
+    
+    // Add event listener for the confirm cancel button
+    document.getElementById('confirmCancel').addEventListener('click', function() {
+        // Get the booking ID from the button's data attribute
+        const bookingId = this.getAttribute('data-booking-id');
+        
+        // Create form data for the AJAX request
+        const formData = new FormData();
+        formData.append('booking_id', bookingId);
+        
+        // Send AJAX request to cancel the ticket
+        fetch('index.php?action=cancel_ticket', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(cancelModal);
+            modal.hide();
+            
+            if (data.success) {
+                // Show success message
+                alert(data.message);
+                
+                // Reload the page to refresh the ticket list
+                window.location.reload();
+            } else {
+                // Show error message
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while cancelling the ticket.');
+        });
+    });
+});
+</script>
+
 </body>
 </html>
